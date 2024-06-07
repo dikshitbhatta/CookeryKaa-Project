@@ -17,5 +17,7 @@ urlpatterns = [
     path('question/<int:pk>/add_reply/', add_reply, name='add_reply'),
     path('recipe/<int:recipe_id>/add_review/', add_review, name='add_review'),
     path('search/',views.search,name='search'),
+    path('category/<str:category_name>/', views.category_recipes, name='category_recipes'),
+    
 ]
     

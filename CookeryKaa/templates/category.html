@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search</title>
-    {% load static %}
+
     <link rel="stylesheet" href="{% static 'css/bookmark.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 </head>
@@ -110,22 +111,22 @@
    <!--... (rest of the HTML remains the same)... -->
 
 <div class="container">
-    {% if results %}
-        <div class="card__container" id="card-container">
-            {% for result in results %}
-                <article class="card__article">
-                    {% if result.photo %}
-                        <img src="{{ result.photo.url }}" alt="{{ result.name }}" class="card__img">
-                    
-                     {% else %}
-                        <p id="nopicmsg">No photo available</p>
-                     {% endif %}
-                    <div class="card__data">
-                        <h2 class="card__title">{{ result.name }}</h2>
-                        <p>{{ result.description }}</p>
-                        <a href="#" class="card__button">Read More</a>
-                    </article>
-                    {% endfor %}    
+    {% if recipes %}
+    <div class="card__container" id="card-container">
+        {% for recipe in recipes %}
+            <article class="card__article">
+                {% if recipe.photo %}
+                    <img src="{{ recipe.photo.url }}" alt="{{ recipe.name }}" class="card__img">
+                {% else %}
+                    <p id="nopicmsg">No photo available</p>
+                {% endif %}
+                <div class="card__data">
+                    <h2 class="card__title">{{ recipe.name }}</h2>
+                    <p>{{ recipe.description }}</p>
+                    <a href="#" class="card__button">Read More</a>
+                </div>
+            </article>
+        {% endfor %}   
         </div>
         
     {% else %}

@@ -61,11 +61,8 @@ def add_recipe(request):
         categories = Category.objects.filter(name__in=category_names)
         print(categories)
         recipe.categories.set(categories)
-<<<<<<< HEAD
-        print(recipe.categories)
-=======
-        print(categories)
->>>>>>> 44cba5f454e12fce833a15a36e8c951493564452
+
+
         
         return redirect('recipe_detail', pk=recipe.pk)
 
@@ -228,3 +225,9 @@ def search(request):
         Q(categories__name__icontains=query)
     ).distinct()
     return render(request, 'search.html', {'results': results, 'query': query})
+
+def category_recipes(request, category_name):
+    category = get_object_or_404(Category, name__iexact=category_name)
+    recipes = Recipe.objects.filter(categories=category).distinct()
+    
+    return render(request, 'category.html', {'category': category, 'recipes': recipes})
