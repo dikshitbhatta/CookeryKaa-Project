@@ -53,10 +53,12 @@ def add_recipe(request):
             if step:
                 photo = request.FILES.get(f'direction_photo_{i}')
                 Direction.objects.create(recipe=recipe, step=step, photo=photo if photo else None)
-                
+         
+        #print(category_names, "all are here")       
         categories = Category.objects.filter(name__in=category_names)
+        print(categories)
         recipe.categories.set(categories)
-        #print(categories)
+        print(recipe.categories)
         
         return redirect('recipe_detail', pk=recipe.pk)
 
