@@ -9,6 +9,9 @@ import json
 from django.db.models import Count
 from notifications.models import Notification
 from .forms import QuestionForm, ReplyForm, ReviewForm
+from django.db.models import Q
+from django.db import models
+from django.conf import settings
 
 # Create your views here.
 @login_required
@@ -56,7 +59,7 @@ def add_recipe(request):
                 
         categories = Category.objects.filter(name__in=category_names)
         recipe.categories.set(categories)
-        #print(categories)
+        print(categories)
         
         return redirect('recipe_detail', pk=recipe.pk)
 
@@ -208,3 +211,14 @@ def follow_user(request):
             # Already following
             return JsonResponse({'status': 'already_following'})
     return JsonResponse({'status': 'error'}, status=400)
+
+
+def search(request):
+    query = request.GET.get('query', '')
+    results = Recipe.objects.filter(
+        Q(user__username__icontains=query) |
+        Q(name__icontains=query) |
+        Q(ingredients__name__icontains=query) |
+        Q(categories__name__icontains=query)
+    ).distinct()
+    return render(request, 'search.html', {'results': results, 'query': query})

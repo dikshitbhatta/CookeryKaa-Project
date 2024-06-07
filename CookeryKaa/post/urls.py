@@ -1,5 +1,8 @@
 from django.urls import path
 from .views import add_recipe, recipe_detail, feed, myprofile,otherprofile, mybookmark, follow_user, like_post, rate_post, add_question, add_reply,add_review
+from django.conf import settings
+from . import views
+from django.conf.urls.static import static
 urlpatterns = [
     path('add_recipe/', add_recipe, name='add_recipe'),
     path('recipe/<int:pk>/', recipe_detail, name='recipe_detail'),
@@ -13,5 +16,6 @@ urlpatterns = [
     path('recipe/<int:pk>/add_question/', add_question, name='add_question'),
     path('question/<int:pk>/add_reply/', add_reply, name='add_reply'),
     path('recipe/<int:recipe_id>/add_review/', add_review, name='add_review'),
+    path('search/',views.search,name='search'),
 ]
     
