@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Profile Page</title>
+    <link rel="stylesheet" href="{%static 'css/otherprofile.css' %}" /> 
+    <link rel="stylesheet" href="{%static 'css/profiledrop.css' %}" /> 
+  </head>
+  <body>
+    <header id="header">
+      <a href="{% url 'index' %}"><img class="logo" src="{%static 'img/assests/flogo.png'%}" alt="Logo"></a>
+      <div class="search_box">
+        <input type="text" placeholder="I am craving...." />
+        <a href="#"></a>
+      </div>
+      <div class="sidekoelements">
+        {% if user.is_authenticated %}
+            <button id="notification-btn" class="hideOnMobile"><ion-icon name="notifications"></ion-icon></button>
+            <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
+            <div class="profile-icon" onclick="menuToggle()" >
+              <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
+            </div>
+        {% else %}
+            <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
+        {% endif %}
+        <button id="menu"><ion-icon name="menu-outline"></ion-icon></button>
+    </div>
+    </header>
+    <nav class="sidebar" id="sidebar">
+      <button id="close-sidebar"><ion-icon name="close"></ion-icon></button>
+      <a href="#">Popular</a>
+      <a href="#">Meals</a>
+      <a href="#">Occasions</a>
+      <a href="#">Cuisines</a>
+      <a href="#">Seasonal</a>
+      <a href="#">Kitchen Wares</a>
+      <a href="#">Contact Us</a>
+      <button id="notification-btn-sb"><ion-icon name="notifications"></ion-icon></button>
+      <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile">
+        <ion-icon name="bookmark"></ion-icon>
+      </button></a>
+      <button id="login-btn-popup-sb"><ion-icon name="person"></ion-icon></button>
+    </nav>
+
+    <div class="header__wrapper">
+      <div class="cols__container">
+          <div class="left__col">
+              <div class="img__container">
+                  <img src="{{ user.profile.picture.url }}" alt="{{ user.username }}"/>
+              </div>
+              <h2>{{ user.username }}</h2>
+              <p>{{ user.profile.bio }}</p>
+              <p>{{ user.email }}</p>
+          <button class="button" id="follow-btn" data-user-id="{{ user.id }}">Follow</button>
+
+          <ul class="about">
+            <li><span>{{followers_count}}</span> Followers</li>
+            <li><span>{{following_count}}</span> Following</li>
+        </ul>
+        
+        <div class="content">
+          <p>{{ user.profile.about }}</p>
+          <ul>
+              <ion-icon name="logo-twitter"></ion-icon>
+              <ion-icon name="logo-facebook"></ion-icon>
+          </ul>
+      </div>
+  </div>
+  <div class="right__col">
+      <div class="post">
+          {% for recipe in recipes %}
+              <article class="card__article">
+                  {% if recipe.photo %}
+                      <img src="{{ recipe.photo.url }}" alt="{{ recipe.title }}" class="card__img">
+                  {% else %}
+                  <img src="{% static 'img/assests/default_photo.png' %}" alt="{{ recipe.title }}" class="card__img">
+                  {% endif %}
+
+                  <div class="card__data">
+                      <h2 class="card__title">{{ recipe.title }}</h2>
+                      <span class="card__description">{{ recipe.description }}</span>
+                      <a href="{% url 'recipe_detail' recipe.pk %}" class="card__button">Start Cooking</a>
+                  </div>
+              </article>
+          {% empty %}
+              <p>{{user.username}} has not posted any recipes yet.</p>
+          {% endfor %}
+          
+      </div>
+  </div>
+</div>
+</div>
+
+<div class="action">
+<div id="profiledropdown" class="menu">
+  <h3>{{ user.username }}</h3>
+  <ul>
+      <li>
+          <ion-icon name="person"></ion-icon>
+          <a href="{% url 'myprofile' %}">My Profile</a>
+      </li>
+      <li>
+          <ion-icon name="pencil"></ion-icon>
+          <a href="{% url 'editprofile' %}">Edit Profile</a>
+          <span>></span>
+      </li>
+      <li>
+          <ion-icon name="person-add"></ion-icon>
+          <a href="#">Add Account</a>
+          <span>></span>
+      </li>
+      <li>
+          <ion-icon name="people"></ion-icon>
+          <a href="#">Switch Accounts</a>
+          <span>></span>
+      </li>
+      <li>
+          <ion-icon name="cog"></ion-icon>
+          <a href="#">Settings</a>
+          <span>></span>
+      </li>
+      <li>
+          <ion-icon name="log-out"></ion-icon>
+          <a href="{% url 'logout' %}">Logout</a>
+          <span>></span>
+      </li>
+  </ul>
+</div>
+</div>
+<input type="hidden" name="csrfmiddlewaretoken" id="csrf_token" value="{{ csrf_token }}">
+
+<script>
+function menuToggle() {
+  const toggleMenu = document.querySelector('.menu');
+  toggleMenu.classList.toggle('active');
+}
+
+document.getElementById('follow-btn').addEventListener('click', function() {
+  const userId = this.getAttribute('data-user-id');
+  const csrfToken = document.getElementById('csrf_token').value;
+
+  fetch("{% url 'follow_user' %}", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfToken
+    },
+    body: JSON.stringify({
+      user_id: userId
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'followed') {
+      alert('You are now following this user.');
+    } else if (data.status === 'already_following') {
+      alert('You are already following this user.');
+    } else {
+      alert('There was an error following this user.');
+    }
+  });
+});
+</script>
+<!-- Hidden file input element -->
+<input type="file" id="file-input" style="display: none;">
+<script src="{% static 'js/profile.js' %}"></script>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

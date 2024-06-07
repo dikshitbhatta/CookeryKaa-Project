@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap');
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: 'Comfortaa', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+
+  background-color: #7FC8F8; /* Body background color */
+   color: #000; /* Text color */
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+.content{
+   padding: 5rem 5rem;
+}.input-box {
+   position: relative;
+   width: 500px;
+   height: 50px;
+   border-bottom: 2px solid #000;
+   margin: 30px 0;
+   display: flex;
+   align-items: center;
+}
+h2{
+   margin-top: 30px;
+   margin-bottom: 25px;
+}
+.input-box.large {
+   height: auto;
+}
+
+.input-box label {
+   position: absolute;
+   top: 50%;
+   left: 5px;
+   transform: translateY(-50%);
+   font-size: 1em;
+   color: #000;
+   font-weight: 500;
+   pointer-events: none;
+   transition: 0.5s;
+}
+
+.input-box input:focus ~ label,
+.input-box input:valid ~ label,
+.input-box textarea:focus ~ label,
+.input-box textarea:valid ~ label {
+   top: -10px;
+}
+
+.input-box input,
+.input-box textarea {
+   width: 100%;
+   background: transparent;
+   border: none;
+   outline: none;
+   font-size: 1em;
+   color: #000;
+   font-weight: 600;
+   padding: 10px 35px 10px 5px;
+   resize: vertical; /* Allows user to resize textarea vertically */
+}
+
+.input-box textarea {
+   height: 100px; /* Adjust height as needed */
+}
+
+.input-box .icon {
+   position: absolute;
+   right: 8px;
+   font-size: 1.2em;
+   color: #000;
+   line-height: 57px;
+}
+.categories, .nav_element {
+   position: relative;
+   display: inline-block;
+   margin: 20px;
+}
+.nav_element a{
+   color: #000;
+   font-weight: 700;
+
+}
+.category-title {
+   display: block;
+   font-weight: bold;
+}
+
+.dropdown {
+   display: none;
+   position: absolute;
+   top: 100%;
+   background-color: rgba(255, 255, 255, 0.2);
+   backdrop-filter: blur(20px); /* Add blur effect */
+   -webkit-backdrop-filter: blur(20px); /* For Safari support */
+   padding: 10px;
+   border-radius: 5px;
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+   z-index: 1;
+   cursor: pointer;
+   width: max-content;
+}
+
+.nav_element:hover .dropdown {
+   display: block;
+}
+
+.dropdown li {
+
+   list-style: none;
+   margin-bottom: 5px;
+}
+
+.dropdown li label {
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   font-weight: 700;
+   color: #000;
+}
+.dropdown li label:hover {
+   background-color: rgba(255, 255, 255, 0.4);
+   cursor: pointer;
+}
+
+.dropdown li input {
+   margin-right: 10px;
+}
+
+.selected-options {
+   margin-top: 10px;
+   font-size: 0.9em;
+   color: #000;
+}
+.selected-options span {
+   display: block;
+   background-color: #77BBE8;
+   border-radius: 3px;
+   padding: 3px 6px;
+   margin-bottom: 5px;
+}
+
+.media_section{
+   max-width: 550px;
+   display: flex;
+   gap: 50px;
+   margin-bottom: 20px;
+}
+.media_section .Food_photo,
+.media_section .Food_video{
+   width: 50%;
+}
+.upload_box{
+   flex:1;
+   margin-top: 20px;
+   background-color: #77BBE8;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+   max-width: 200px;
+   height: 150px;
+   border-radius: 10px;
+   display:flex;
+   padding: 0px;
+   margin-bottom: 5px;
+}
+
+#photo-display, #video-display {
+   width: 100%;
+   height: 100%;
+   border-radius: 10px;
+   object-fit: cover;
+   cursor: pointer;
+}
+
+.button {
+   position: relative;
+   width: 100%;
+   max-width: 200px;
+   background: #FF6392;
+   color: #fff;
+   border: none;
+   padding: 10px 10px;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: transform .2s;
+   margin-top: 10px;
+   margin-bottom: 10px;
+ }
+ .button ion-icon {
+   margin-right: 10px;
+   margin-top: auto;
+   color: #fff;
+ }
+ 
+ .button:hover {
+   background: #E05F8B;
+   transform: translateY(-3px);
+ }
+.Ingrediants{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.Ingrediants h4{
+   margin-bottom: 10px;
+   }
+.ingredient-box {
+   display: flex;
+   align-items: center;
+   margin-bottom: 10px;
+}
+.ing,.quan{
+   flex:1;
+   position:relative;
+   width: 100%;
+   max-width: 300px;
+   height: 100%;
+   height: 40px;
+   display: inline-block;
+   border: 1px solid #444;
+   background-color: transparent;
+   color: #000;
+   border-radius: 5px;
+}
+.ing{
+   margin-right: 8px;
+}
+
+.ing,.quan:hover input{
+   width: 100%;
+}
+.ing input,.quan input{
+   width: 100%;
+   height: 40px;
+   outline: 0;
+   border: none;
+   font-weight: 700;
+   background:transparent;
+   padding: 10px;
+}
+
+.Direction{
+   margin-top: 10px;
+   margin-bottom: 10px;
+}
+.dir{
+   display: flex;
+}
+.direction_box{
+   position:relative;
+   width: 100%;
+   max-width: 500px;
+   display: flex;
+   align-items: center;
+   background-color: transparent;
+}
+.direction_box textarea{
+   width: 100%;
+   padding: 10px;
+   border: 1px solid #444;
+   background-color: transparent;
+   color: #000;
+   border-radius: 5px;
+   resize: vertical;;
+}
+.dir_image {
+   position: relative;
+   max-width: 110px;
+   height: 90px;
+   display: flex; /* Use flexbox */
+   align-items: center;
+   justify-content: center; /* Center horizontally */
+   background-color: #77BBE8;
+   border-radius: 10px;
+   cursor: pointer;
+   margin-left: 10px;
+   margin-bottom: 10px;
+   margin-top: 10px;
+   overflow: hidden; /* Ensure image doesn't overflow the container */
+}
+
+.dir_image input[type="image"] {
+   width: 100%;
+   height: 100%;
+   object-fit: cover; /* Ensure the image covers the entire container */
+   border-radius: 10px; /* Keep the border-radius for the image */
+}
+
+
+.time {
+   margin-top: 20px;
+}
+
+.time label {
+   display: block;
+   margin-bottom: 5px;
+   font-weight: bold;
+}
+
+.time input[type="number"] {
+   margin-bottom: 10px;
+   padding: 5px 10px;
+   border: 1px solid #444;
+   background-color: transparent;
+   color: #000;
+   border-radius: 5px;
+   width: 100px;
+   box-sizing: border-box;
+}
+.saveRecipe{
+   Margin:10px 0px;
+   display: flex;
+   gap: 20px;
+}

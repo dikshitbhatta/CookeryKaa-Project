@@ -1,0 +1,451 @@
+
+{%load static%}
+{% load socialaccount %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title >Cookeryकाँ</title>
+    <link rel="icon" type="image/x-icon" href="{%static 'img/assets/logo.png'%}">
+  <!-- Swiper CSS -->
+    <link rel="stylesheet" href="{%static 'css/swiper-bundle.min.css'%}" />
+    <link rel="stylesheet" href="{%static 'css/style.css'%}"/>
+    <link rel="stylesheet" href="{%static 'css/recipie.css'%}"/>
+    <link rel="stylesheet" href="{%static 'css/profiledrop.css'%}"/>
+    <link rel="stylesheet" href="{%static 'css/notifications.css' %}">
+{% comment %} 
+     <iframe name="recipeFrame" id="recipeFrame" src="" frameborder="0"
+        width="800px"
+        height="530px">
+    </iframe>  {% endcomment %}
+</head>
+<body>
+    <header id="header">
+        <a href="#"><img class="logo" src="{%static 'img/assests/flogo.png'%}"></a>
+        <div class="search_box">
+            <input type="text" placeholder="I am craving....">
+            <button class = "search-btn"><ion-icon name="search"></ion-icon></button>
+            <a href="#"></a>
+        </div>
+        <div class="sidekoelements">
+          {% if user.is_authenticated %}
+              
+              <button id="notification-btn" class="hideOnMobile" name="notifications" onclick="toggleNotifications()">
+                <ion-icon name="notifications"></ion-icon>
+                <span id="notification-badge" class="badge">{{ notification_count }}</span> 
+              </button>
+
+              <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
+              <div class="profile-icon" onclick="menuToggle()" >
+                <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
+              </div>
+          {% else %}
+              <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
+          {% endif %}
+          <button id="menu"><ion-icon name="menu-outline"></ion-icon></button>
+      </div>
+        
+    </header>
+    
+    <div id="notifications-dropdown" class="notifications-dropdown">
+      <div class="notification-header">
+          <h3>Notifications</h3>
+          <button onclick="toggleNotifications()"><ion-icon name="close"></ion-icon></button>
+      </div>
+      <div class="notification-content">
+          <ul>
+            {% for notification in notifications %}
+            <li class="notification-item">
+                <ion-icon name="{{ notification.icon }}"></ion-icon>
+                <span>{{ notification.message }}</span>
+                <small>{{ notification.time_ago }}</small>
+            </li>
+            {% endfor %}
+          </ul>
+      </div>
+  </div>
+
+        <nav class="navbar" id="navbar">
+            <div class="nav_element">
+                <a href="#"class="">Popular</a>
+                    <ul class="dropdown">
+                        <li><a href="Addreceipepage.html" target="recipeFrame">Add Recipe</a></li>
+                        <li><a href="#">Link 2</a></li>
+                    </ul>
+    
+            </div>
+            <div class="nav_element">
+                <a href="#"class="">Meals</a> 
+                <ul class="dropdown">
+                    <li><a href="#">Breakfast</a></li>
+                    <li><a href="#">Lunch</a></li>
+                    <li><a href="#">Dinner</a></li>
+                </ul>
+            </div>
+            <div class="nav_element">
+                <a href="#"class="">Ocassions</a>
+                <ul class="dropdown">
+                    <li><a href="#">Dashain</a></li>
+                    <li><a href="#">Tihar</a></li>
+                    <li><a href="#">Maghi</a></li>
+                    <li><a href="#">Birthday</a></li>
+                    <li><a href="#">New Year</a></li>
+                </ul>
+            </div>
+            <div class="nav_element">    
+                <a href="#"class="">Cusines</a>
+                <ul class="dropdown">
+                    <li><a href="#">Nepali</a></li>
+                    <li><a href="#">Indian</a></li>
+                    <li><a href="#">Chinese</a></li>
+                    <li><a href="#">Italian</a></li>
+                </ul>
+            </div>
+            <div class="nav_element">
+                <a href="#"class="">Seasonal</a>
+                <ul class="dropdown">
+                    <li><a href="#">Spring</a></li>
+                    <li><a href="#">Fall</a></li>
+                    <li><a href="#">Summer</a></li>
+                    <li><a href="#">Winter</a></li>
+                </ul>
+            </div>
+            <div class="nav_element">
+                <a href="#"class="">Kitchen Wares</a>
+                <ul class="dropdown">
+                    <li><a href="#">Link 1</a></li>
+                    <li><a href="#">Link 2</a></li>
+                </ul>
+            </div>
+            <div class="nav_element">    
+                <a href="#"class="">Contact Us</a>
+            </div>
+            
+        </nav>
+        <nav class="sidebar" id="sidebar">
+            <button id="close-sidebar"><ion-icon name="close"></ion-icon></button>
+            <a href="#">Popular</a>
+            <a href="#">Meals</a>
+            <a href="#">Ocassions</a>
+            <a href="#">Cusines</a>
+            <a href="#">Seasonal</a>
+            <a href="#">Kitchen Wares</a>
+            <a href="#">Contact Us</a>
+            <button id="notification-btn-sb"><ion-icon name="notifications"></ion-icon></button>
+            <a href="{% url 'bookmark' %}"><button id="bookmark-btn"><ion-icon name="bookmark"></ion-icon></button></a>
+            <button id="login-btn-popup-sb"><ion-icon name="person"></ion-icon></button>
+        </nav>
+    <div class="wrapper">
+        <span >
+            <button class="icon-close"><ion-icon name="close"></ion-icon></button>
+        </span>
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="form-box login ">
+            <h2>Login</h2>
+            <form action="{% url 'index' %}" method ="post">
+              {% csrf_token %}
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                    <input type="email" id="email" name="email" required>
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                    <input type="password" class="password-field" id="password" name="password" required>
+                    <ion-icon name="eye-off" class="eye-off"></ion-icon>
+                    <ion-icon name="eye" class="eye"></ion-icon>
+                    <label>Password</label>
+                </div>
+                <div class="remember-forget">
+                    <label>
+                        <input type="checkbox">
+                        Remember Me
+                    </label>
+                    <a href="{% url 'account_reset_password' %}">Forgot Password?</a>
+                </div>
+                <div type="submit" name ="login" class="button-container-2">
+                  <span class ="mas">LOGIN</span>
+                  <button type="submit" name ="login" class="btn">LOGIN</button>
+                </div>
+                <div class="continue-with">
+                    <p> OR CONTINUE WITH</p>
+                    <button type="button" class="facebook-sign-in" onclick="window.location.href='{% provider_login_url 'facebook' %}'">
+                      <ion-icon name="logo-facebook"class="logo-app"></ion-icon></button>
+                    <button type="button" class="google-sign-in" onclick="window.location.href='{% provider_login_url 'google' %}'">
+                      <ion-icon name="logo-google"class="logo-app"></ion-icon></button>
+                </div>
+                <div class="login-register">
+                    <p>Don't have an account?
+                        <a href="#"class="register-link">Register</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-box register">
+            <h2>Registration</h2>
+            <form action="{% url 'index' %}" method ="post">
+              {% csrf_token %}
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="person"></ion-icon></span>
+                    <input type="text" name ="username" id ="username" required>
+                    <label>Username</label>
+                </div>
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                    <input type="email" name ="email" id ="email"  required>
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                    <input type="password" class="password-field" name ="password1" id ="password1" required>
+                    <ion-icon name="eye-off" class="eye-off"></ion-icon>
+                    <ion-icon name="eye" class="eye"></ion-icon>
+                    <label>Password</label>
+                </div>
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                    <input type="password" class="password-field" name ="password2" id ="password2" required>
+                    <ion-icon name="eye-off" class="eye-off"></ion-icon>
+                    <ion-icon name="eye" class="eye"></ion-icon>
+                    <label>Confirm Password</label>
+                </div>
+                <div class="remember-forget">
+                    <label>
+                        <input type="checkbox" required>
+                        I agree to all terms & conditions
+                    </label>
+                </div>
+                <div class="continue-with">
+                    <p> OR CONTINUE WITH</p>
+                    <button type ="button" class ="facebook-sign-in" onclick="window.location.href='{% provider_login_url 'facebook' %}' ">
+                      <ion-icon name="logo-facebook"class="logo-app"></ion-icon></button>
+                    <button type ="button" class ="google-sign-in" onclick="window.location.href='{% provider_login_url 'google' %}' ">
+                        <ion-icon name="logo-google"class="logo-app"></ion-icon></button>
+                </div>
+                
+                <div class="button-container-2">
+                  <span class="mas">REGISTER</span>
+                  <button type="button" name="Hover">REGISTER</button>
+                </div>
+                <div class="login-register">
+                    <p>Already have an account?
+                        <a href="#" id="login123" class="login-link">Login</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+    <div class="stories-container">
+      <div class="content">
+          <div class="prev-btn"><ion-icon name="chevron-back-outline" class="prev-next-btn"></ion-icon></div>
+          <div class="stories">
+              <div class="create-story" id="create-story">
+                  <div class="create-story-content">
+                      <img id="profile-picture" src="{{ user.profile.picture.url }}" alt="Profile Picture">
+                      <div class="create-story-btn">
+                          <ion-icon name="add-circle-outline" class="create-icon"></ion-icon>
+                          <span>Create story</span>
+                      </div>
+                      <input type="file" id="story-upload" accept="image/*" style="display: none;">
+                  </div>
+              </div>
+          </div>
+          <div class="next-btn active"><ion-icon name="chevron-forward-outline" class="prev-next-btn"></ion-icon></div>
+      </div>
+  </div>
+
+  <!-- Fullview Modal -->
+    <div class="stories-fullview">
+      <div class="story-close-btn"><ion-icon name="close-outline"></ion-icon></div>
+      <div class="content">
+        <div class="prev-btn"><ion-icon name="chevron-back-outline" class="prev-next-btn"></ion-icon></div>
+        <div class="story">
+          <img src="images/assests/5.jpg" alt="">
+          <div class="author">Author</div>
+        </div>
+        <div class="next-btn "><ion-icon name="chevron-forward-outline" class="prev-next-btn"></ion-icon></div>
+      </div>
+    </div>
+
+  <!-- Embed static paths in a script -->
+  <script type="application/json" id="all-stories-data">
+      [
+          {
+              "id": 0,
+              "author": "Siddhanta Adhikari",
+              "imageURL": "{% static 'img/assests/1.jpg' %}"
+          },
+          {
+              "id": 1,
+              "author": "Shishir Adhikari",
+              "imageURL": "{% static 'img/assests/2.jpg' %}"
+          },
+          {
+              "id": 2,
+              "author": "Prashesh Adhikari",
+              "imageURL": "{% static 'img/assests/3.jpg' %}"
+          },
+          {
+              "id": 3,
+              "author": "Dikshit Bhatta",
+              "imageURL": "{% static 'img/assests/4.jpg' %}"
+          },
+          {
+              "id": 4,
+              "author": "Kasmik Regmi",
+              "imageURL": "{% static 'img/assests/5.jpg' %}"
+          },
+          {
+              "id": 5,
+              "author": "Pratik Pokhrel",
+              "imageURL": "{% static 'img/assests/6.jpg' %}"
+          },
+          {
+              "id": 6,
+              "author": "Bikesh Khatri",
+              "imageURL": "{% static 'img/assests/7.jpg' %}"
+          }
+      ]
+  </script>
+
+    <div class="container swiper">
+      <div class="slide-container">
+        <div class="card-wrapper swiper-wrapper">
+          <div class="card swiper-slide">
+            <div class="image-box">
+              <img src="{%static 'img/assests/1.jpg'%}" alt="" />
+            </div>
+            <div class="profile-details">
+              <img src="{%static 'img/profile/profile1.jpg'%}" alt="" />
+              <div class="name-job">
+                <h3 class="name">David Cardlos</h3>
+                <h4 class="job">Full Stack Developer</h4>
+              </div>
+            </div>
+          </div>
+          <div class="card swiper-slide">
+            <div class="image-box">
+              <img src="{%static 'img/assests/2.jpg'%}" alt="" />
+            </div>
+            <div class="profile-details">
+              <img src="{%static 'img/profile/profile2.jpg'%}" alt="" />
+              <div class="name-job">
+                <h3 class="name">Siliana Ramis</h3>
+                <h4 class="job">Photographer</h4>
+              </div>
+            </div>
+          </div>
+          <div class="card swiper-slide">
+            <div class="image-box">
+              <img src="{%static 'img/assests/3.jpg'%}" alt="" />
+            </div>
+            <div class="profile-details">
+              <img src="{%static 'img/profile/profile3.jpg'%}" alt="" />
+              <div class="name-job">
+                <h3 class="name">Richard Bond</h3>
+                <h4 class="job">Data Analyst</h4>
+              </div>
+            </div>
+          </div>
+          <div class="card swiper-slide">
+            <div class="image-box">
+              <img src="{%static 'img/assests/4.jpg'%}" alt="" />
+            </div>
+            <div class="profile-details">
+              <img src="{%static 'img/profile/profile4.jpg'%}" alt="" />
+              <div class="name-job">
+                <h3 class="name">Priase</h3>
+                <h4 class="job">App Developer</h4>
+              </div>
+            </div>
+          </div>
+          <div class="card swiper-slide">
+            <div class="image-box">
+              <img src="{%static 'img/assests/6.jpg'%}" alt="" />
+            </div>
+            <div class="profile-details">
+              <img src="{%static 'img/profile/profile5.jpg'%}" alt="" />
+              <div class="name-job">
+                <h3 class="name">James Laze</h3>
+                <h4 class="job">Blogger</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-button-next swiper-navBtn"></div>
+      <div class="swiper-button-prev swiper-navBtn"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+
+  <div class="action">
+      <div id ="profiledropdown" class="menu">
+          <h3>
+              {{user.username}} 
+          </h3>
+          <ul>
+              <li>
+                  <ion-icon name="person"></ion-icon>
+                  <a href="{% url 'myprofile' %}">My Profile</a>
+
+              </li>
+              <li>
+                  <ion-icon name="pencil"></ion-icon>
+                  <a href="{% url 'editprofile' %}">Edit Profile</a>
+                  <span>></span>
+              </li>
+              <li>
+                  <ion-icon name="person-add"></ion-icon>
+                  <a href="#">Add Account</a>
+                  <span>></span>
+              </li>
+              <li>
+                  <ion-icon name="people"></ion-icon>
+                  <a href="#">Switch Accounts</a>
+                  <span>></span>
+              </li>
+              <li>
+                  <ion-icon name="cog"></ion-icon>
+                  <a href="#">Settings</a>
+                  <span>></span>
+                  
+              </li>
+              <li>
+                  <ion-icon name="log-out"></ion-icon>
+                  <a href="{% url 'logout' %}">Logout</a>
+                  <span>></span>
+              </li>
+          </ul>
+      </div>
+  </div>
+    <script>
+    function menuToggle(){
+        const toggleMenu = document.querySelector('.menu');
+        toggleMenu.classList.toggle('active')
+    }
+  </script>
+
+    <script src="{%static 'js/notifications.js' %}"></script>
+    <script src="{%static 'js/swiper-bundle.min.js'%}"></script>
+    <script src="{%static 'js/script.js'%}"></script>
+    <script src="{%static 'js/story.js'%}"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+
+</body>
+</html>

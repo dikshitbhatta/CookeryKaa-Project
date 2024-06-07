@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Recipe</title>
+    <link rel="stylesheet" href="{% static 'css/addrecipe.css' %}" />
+</head>
+<body>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'add_recipe' %}">
+        {% csrf_token %}
+        <div class="content">
+        <h1>Add Recipe</h1>
+        <div class="Recipe_title input-box">
+            <span class="icon"><ion-icon name="pencil"></ion-icon></span>
+            <input type="text" name="name" required>
+            <label>Recipe Title</label>
+        </div>
+        <div class="Recipe_description input-box large">
+            <textarea class="Recipe_description" name="description" required></textarea>
+            <label>Recipe Description</label>
+        </div>
+
+        <h2 style="text-decoration: underline;">Categories</h2>
+
+        <div class="categories nav_element">
+            <a href="#" class="category-title">Meals  <ion-icon name="caret-down-circle-outline"></ion-icon></a>
+            <ul class="dropdown">
+                <li><label><input type="checkbox" name="categories" value="Breakfast"> Breakfast</label></li>
+                <li><label><input type="checkbox" name="categories" value="Lunch"> Lunch</label></li>
+                <li><label><input type="checkbox" name="categories" value="Dinner"> Dinner</label></li>
+            </ul>
+            <div class="selected-options"></div>
+        </div>
+
+        <div class="nav_element">
+            <a href="#" class="category-title">Occasions  <ion-icon name="caret-down-circle-outline"></ion-icon></a>
+            <ul class="dropdown">
+                <li><label><input type="checkbox" name="categories" value="Dashain"> Dashain</label></li>
+                <li><label><input type="checkbox" name="categories" value="Tihar"> Tihar</label></li>
+                <li><label><input type="checkbox" name="categories" value="Maghi"> Maghi</label></li>
+                <li><label><input type="checkbox" name="categories" value="Birthday"> Birthday</label></li>
+                <li><label><input type="checkbox" name="categories" value="New Year"> New Year</label></li>
+            </ul>
+            <div class="selected-options"></div>
+        </div>
+
+        <div class="nav_element">
+            <a href="#" class="category-title">Cuisines  <ion-icon name="caret-down-circle-outline"></ion-icon></a>
+            <ul class="dropdown">
+                <li><label><input type="checkbox" name="categories" value="Nepali"> Nepali</label></li>
+                <li><label><input type="checkbox" name="categories" value="Indian"> Indian</label></li>
+                <li><label><input type="checkbox" name="categories" value="Indian"> Chinese</label></li>
+                <li><label><input type="checkbox" name="categories" value="Italian"> Italian</label></li>
+            </ul>
+            <div class="selected-options"></div>
+        </div>
+
+        <div class="nav_element">
+            <a href="#" class="category-title">Seasonal  <ion-icon name="caret-down-circle-outline"></ion-icon></a>
+            <ul class="dropdown">
+                <li><label><input type="checkbox" name="categories" value="Spring"> Spring</label></li>
+                <li><label><input type="checkbox" name="categories" value="Fall"> Fall</label></li>
+                <li><label><input type="checkbox" name="categories" value="Summer"> Summer</label></li>
+                <li><label><input type="checkbox" name="categories" value="Winter"> Winter</label></li>
+            </ul>
+            <div class="selected-options"></div>
+        </div>
+        
+        <h2>Add Your Media</h2>
+        <div class="media_section">
+            <div class="Food_photo">
+                <div class="upload_box">
+                    <img src="{%static 'img/assests/uploadPhoto.png'%}" id="photo-display" alt="Upload Photo" />
+                </div>
+                <button type="button" class="button" id="photo-upload-button"><ion-icon name="image-sharp"></ion-icon>Add Photo</button>
+                <input type="file" name="photo" id="photo-upload-input" accept="image/*" style="display: none;">
+            </div>
+            <div class="Food_video">
+                <div class="upload_box">
+                    <video src id="video-display" controls style="display: none;"></video>
+                    <img src="{%static 'img/assests/uploadVideo.png'%}" alt="Default Video Thumbnail">
+                </div>
+                <button type ="button" class="button" id="video-upload-button"><ion-icon name="videocam"></ion-icon>Add Video</button>
+                <input type="file" name="video" id="video-upload-input" accept="video/*" style="display: none;">
+            </div>
+        </div>
+        
+        <h2 style="text-decoration: underline;">Ingredients</h2> 
+        <div class="Ingrediants" id="Ingrediants_container">
+            <h4 style="font-weight: lighter;">Enter your Ingredients and the Quantity</h4>
+            <div class="ingredient-box">
+                <div class="ing">
+                    <input type="text" name="ingredient_name" placeholder="Eg: 1. tablesppon sugar">
+                </div>
+                <div class="quan">  
+                    <input type="text" name="ingredient_quantity" placeholder="Quantity">
+                </div> 
+            </div>
+        </div>
+        
+        <h2 style="text-decoration: underline;">Directions</h2> 
+        <div class="Direction" id="directions-container">
+            <h4 style="font-weight: lighter;">Add direction one step at a time</h4>
+            <div class="dir" id="direction-1">
+                <div class="direction_box">
+                    <textarea name="direction_step_1" placeholder="Place Ingredients in mixture"></textarea>
+                </div>
+                <div class="dir_image" onclick="Imageupload(this)">
+                    <img class="direction-image" src="{%static 'img/assests/uploadPhoto.png'%}" alt="Image">
+                    <input class="direction-photo-input" name="direction_photo_1" type="file" accept="image/*" style="display:none;" onchange="displayImage(event, this)">
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="direction_count" id="direction-count" value="1"> <!-- Hidden input for direction count -->
+        <div class="time">
+            <label for="preparation-time">Preparation Time (in minutes)</label>
+            <input type="number" id="preparation-time" name="preparation_time" min="0" step="1" required>
+            <label for="cooking-time">Cooking Time (in minutes)</label>
+            <input type="number" id="cooking-time" name="cooking_time" min="0" step="1" required>
+        </div>   
+
+        <h2 style="text-decoration: underline;">Save this Recipe as:</h2> 
+        <div class="saveRecipe">
+            <label><input name="visibility" type="checkbox" value="Public"> Public</label>
+            <label><input name="visibility" type="checkbox" value="Private"> Private</label>
+        </div>
+        
+        <div class="Save_button">
+            <button class="button" onclick="saveRecipe()"> Save </button>
+        </div>
+    </div>
+</form>
+<script>
+    function saveRecipe() {
+        alert('Saved');
+        // Send message to parent window to close the iframe and redirect
+        window.parent.postMessage('closeAndRedirect', '*');
+    }
+</script>
+
+    <script src="{%static 'js/addrecipe.js'%}"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

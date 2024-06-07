@@ -1,0 +1,260 @@
+{% load static %}
+{%load custom_filters%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ recipe.name }}</title>
+    <link rel="stylesheet" href="{% static 'css/recipe_detail.css' %}" />
+    <style>
+        #pppp {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <a href="{% url 'index' %}"><img class="logo" src="{% static 'img/assests/flogo.png' %}"></a>
+        <div class="search_box">
+            <input type="text" placeholder="I am craving....">
+            <button class="search-btn"><ion-icon name="search"></ion-icon></button>
+            <a href="#"></a>
+        </div>
+        <div class="sidekoelements">
+            {% if user.is_authenticated %}
+                <button id="notification-btn" class="hideOnMobile"><ion-icon name="notifications"></ion-icon></button>
+                <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
+                <div class="profile-icon" onclick="menuToggle()">
+                    <img class="img__container" id="pppp" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
+                </div>
+            {% else %}
+                <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
+            {% endif %}
+            <button id="menu"><ion-icon name="menu-outline"></ion-icon></button>
+        </div>
+    </header>
+    <nav class="sidebar" id="sidebar">
+        <button id="close-sidebar"><ion-icon name="close"></ion-icon></button>
+        <a href="#">Popular</a>
+        <a href="#">Meals</a>
+        <a href="#">Ocassions</a>
+        <a href="#">Cusines</a>
+        <a href="#">Seasonal</a>
+        <a href="#">Kitchen Wares</a>
+        <a href="#">Contact Us</a>
+        <button id="notification-btn-sb"><ion-icon name="notifications"></ion-icon></button>
+        <a href="{% url 'bookmark' %}"><button id="bookmark-btn"><ion-icon name="bookmark"></ion-icon></button></a>
+        <button id="login-btn-popup-sb"><ion-icon name="person"></ion-icon></button>
+    </nav>
+    <div class="information">
+        <div class="upper">
+            <h1 class="title">{{ recipe.name }}</h1>
+            <div class="rating">★★★★★</div>
+            <div class="author">
+                <a href="{% url 'otherprofile' recipe.user.id %}"><img src="{{ recipe.user.profile.picture.url }}" alt="profile" class="avatar"></a>
+                <a class="name" href="{% url 'otherprofile' recipe.user.id %}"><span class="name">{{ recipe.user.username }}</span></a>
+            </div>
+            <p class="description">{{ recipe.description }}</p>
+        </div>
+        {% if recipe.photo %}
+        <div class="foodPic">
+
+                <img src="{{ recipe.photo.url }}" alt="{{ recipe.name }}">
+            
+            <div class="icons">
+                <ion-icon name="bookmark"></ion-icon>
+                <ion-icon name="share-social"></ion-icon>
+            </div>
+            
+        </div>
+        {% endif %}
+        <div class="cookingDetails">
+            <div class="info">
+                <li>
+                    <ion-icon name="timer"></ion-icon>
+                    <p>Preparation Time: {{ recipe.preparation_time }} Minutes</p>
+                </li>
+                <li>
+                    <ion-icon name="timer"></ion-icon>
+                    <p>Cooking Time: {{ recipe.cooking_time }} Minutes</p>
+                </li>
+                <li>
+                    <ion-icon name="restaurant"></ion-icon>
+                    <p>Ingredients: {{ ingredients|length }}</p>
+                </li>
+            </div>
+        </div>
+    </div>
+    <div class="steps">
+        <div class="directions">
+            <h2>PREPARATION</h2>
+            <ul>
+                {% if recipe.video %}
+                <li>
+                    <div class="video-container">
+                        <video src="{{ recipe.video.url }}" autoplay loop muted></video>
+                        <div class="side">
+                            <p> Make the recipe with us</p>
+                            <button class="vidExpand"><ion-icon name="play-circle-outline"></ion-icon>Watch</button>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+                {% for direction in directions %}
+                <li>
+                    <h3>Step {{ forloop.counter }}</h3>
+                    <span class="step-content">
+                        {% if direction.photo %}
+                            <img src="{{ direction.photo.url }}" alt="Step {{ forloop.counter }}">
+                            <button class="expand"><ion-icon name="expand-outline"></ion-icon></button>
+                        {% endif %}
+                    </span>
+                    <p>{{ direction.step }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="ingredientsDetails">
+            <h2>INGREDIENTS:</h2>
+            <h3>Quantity</h3>
+            <ul>
+                {% for ingredient in ingredients %}
+                <li>{{ ingredient.name }}<span class="quantity">{{ ingredient.quantity }}</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="comment_reviewSection">
+        <div class="questions-replies">
+            <h2>Questions and Replies</h2>
+            <div class="search-bar">
+                <img src="{% if user.is_authenticated %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="" class="avatar">
+
+                <form method="post" action="{% url 'add_question' recipe.pk %}">
+                    {% csrf_token %}
+                    {{ question_form.as_p }}
+                    {% if user.is_authenticated %}
+                        <button type="submit" class="button">Submit</button>
+                    {% else %}
+                        <button type="button" class="button">SIGN IN</button>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="question">
+                <img src="{{ question.user.profile.picture.url }}" alt="User Avatar" class="avatar">
+                <p>{{ question.text }}</p>
+                <div class="replies">
+                    {% for reply in question.replies.all %}
+                    <div class="reply">
+                        <img src="{{ reply.user.profile.picture.url }}" alt="User Avatar" class="avatar">
+                        <p>{{ reply.text }}</p>
+                    </div>
+                    {%endfor%}
+
+                    <div class="reply-form">
+                        <img src="{% if user.is_authenticated %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="" class="avatar">
+                        <form method="post" action="{% url 'add_reply' recipe.pk %}">
+                            {% csrf_token %}
+                            {{ reply_form.as_p }}
+                            {% if user.is_authenticated %}
+                                <button type="submit" class="button">Reply</button>
+                            {% else %}
+                                <button type="button" class="button">SIGN IN</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="reviews">
+            <h2>Reviews</h2>
+            <div class="review">
+                <img src="{% if user.is_authenticated %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Reviewer" class="avatar">
+                <form method="post" action="{% url 'add_review' recipe.pk %}">
+                    {% csrf_token %}
+                    {{ review_form.as_p }}
+                    {% if user.is_authenticated %}
+                        <button type="submit" class="button-review">Submit</button>
+                    {% else %}
+                        <button type="button" class="button-review">SIGN IN</button>
+                    {% endif %}
+                </form>
+            </div>
+            {% for review in reviews %}
+            <div class="review">
+                <img src="{{ review.user.profile.picture.url }}" alt="Reviewer" class="avatar">
+                <div class="review-content">
+                    <p>{{ review.text }}</p>
+                    <div class="review-rating">
+                        {% for star in review.rating|times %}
+                            <ion-icon name="star"></ion-icon>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <div class="video-fullview">
+        <div class="close-btn"><ion-icon name="close-outline"></ion-icon></div>
+        <div class="content">
+            {% if recipe.video %}
+                <video src="{{ recipe.video.url }}" controls></video>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <div class="step-fullview">
+        <div class="close-btn"><ion-icon name="close-outline"></ion-icon></div>
+        <div class="content">
+            {% if direction.photo %}
+                <img src="{{direction.photo.url}}" alt="Step Image">
+                <h3>Step {{ forloop.counter }}</h3>
+                <p>{{direction.step}}</p>
+            {%endif%}
+        </div>
+    </div>
+
+    <script src="{% static 'js/profile.js' %}"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+        const vidExpandBtn = document.querySelector('.vidExpand');
+        const videoFullView = document.querySelector('.video-fullview');
+        const closeBtn = document.querySelector('.close-btn');
+        const video = document.querySelector('.video-fullview video');
+        const stepExpandBtns = document.querySelectorAll('.expand');
+        const stepFullView = document.querySelector('.step-fullview');
+        const StepcloseBtn = document.querySelector('.step-fullview .close-btn');
+
+        stepExpandBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                stepFullView.style.display = 'flex';
+            });
+        });
+
+        StepcloseBtn.addEventListener('click', function() {
+            stepFullView.style.display = 'none';
+        });
+
+        vidExpandBtn.addEventListener('click', () => {
+            videoFullView.style.display = 'block';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            videoFullView.style.display = 'none';
+            video.pause(); // Pause the video playback when the container is closed
+        });
+    </script>
+</body>
+</html>

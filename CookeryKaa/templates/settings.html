@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings</title>
+    <link rel="stylesheet" href="{% static 'css/settings.css'%}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <a href="{% url 'index' %}"><img class="logo" src="{% static 'img/assests/flogo.png'%}" alt="Logo"></a>          
+            <h2><ion-icon name="cog"></ion-icon>Settings</h2>
+            <ul id="settings-menu">
+                <li class="menu-item active" id="Edit">Edit profile</li>
+                <li class="menu-item"id="changePassword">Change password</li>
+                <li class="menu-item" id ="privacy">Privacy and security</li>
+                <!-- Add other menu items here -->
+            </ul>
+        </div>
+        <div class="content">
+            <!-- Display messages -->
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %} 
+
+
+            <form method="POST" enctype ="multipart/form-data" class="editProfile">
+                {%csrf_token%}
+                <div class="form-group flex-container img-group">
+                    <div class="img__container" style="display: block;">
+                        <img src="{{user.profile.picture.url}}" alt="Profile Picture">
+                    </div>
+                    <div class="text__container">
+                        <h3>{{user.username}}</h3>
+                        <input type="file" name="picture" id="picture" style="display: none;">
+                        <button id="upload-photo" onclick="document.getElementById('picture').click(); return false;">Change Profile Picture</button>
+                    </div>
+                </div>
+                
+                
+                <div class="form-group flex-container">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="{{user.username}}">
+                </div>
+                <p>In most cases, you'll not be able to change for another 14 days</p>
+                
+                <div class="form-group flex-container">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" name="bio" rows="3">{{profile.bio}}</textarea>
+                </div>
+                <div class="form-group flex-container">
+                    <label for="about">About</label>
+                    <textarea id="about" name="about" rows="4">{{profile.about}}</textarea>
+                </div>
+                    <h3>Personal Information</h3>
+                    <p>Provide your personal information, even if the account is used for a business, a pet or something else. This won't be a part of your public profile.</p>
+                <div class="form-group flex-container">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{user.email}}">
+                </div>
+                <div class="form-group flex-container">
+                    <label for="phone">Phone number</label>
+                    <input type="tel" id="phone" name="phone" value="{{profile.phone}}" placeholder="Phone number">
+                </div>
+                <div class="form-group flex-container">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender">
+                        <option value="male" {% if profile.gender == 'male' %}selected{% endif %}>Male</option>
+                        <option value="female" {% if profile.gender == 'female' %}selected{% endif %}>Female</option>
+                        <option value="other" {% if profile.gender == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                <div class="bottombtn">
+                    <button type="submit">Submit</button>
+                    <button type="button" class="deactivate-btn">Temporarily deactivate my account</button>
+                </div>
+                
+            </form>
+            <div class="content">
+                <form method ="POST" action="{% url 'change_password'%}" class="passwordForm">
+                    {% csrf_token %}
+                    <div class="form-group flex-container img-group">
+                        <div class="img__container" style="display: block;">
+                            <img src="{{ user.profile.picture.url }}" alt="Profile Picture">
+                        </div>
+                        <div class="text__container">
+                            <h3>{{ user.username }}</h3>
+                        </div>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="form-group flex-container">
+                            <label class="label" for="current-password">Current password</label>
+                            <input type="password" name ="current_password" class="password-field" id="current-password">
+                            <ion-icon name="eye-off" class="eye-off"></ion-icon>
+                            <ion-icon name="eye" class="eye"></ion-icon>
+                        </div>
+                        <div class="form-group flex-container">
+                            <label class="label" for="new-password">New password</label>
+                            <input type="password" name ="new_password" class="password-field" id="new-password">
+                            <ion-icon name="eye-off" class="eye-off"></ion-icon>
+                            <ion-icon name="eye" class="eye"></ion-icon>
+                        </div>
+                        <div class="form-group flex-container">
+                            <label class="label" for="repeat-password">Repeat new password</label>
+                            <input type="password" name="repeat_password" class="password-field" id="repeat-password">
+                            <ion-icon name="eye-off" class="eye-off"></ion-icon>
+                            <ion-icon name="eye" class="eye"></ion-icon>
+                        </div>
+                    </div>
+                    <div class="bottombtn">
+                        <button type="submit">Save Changes</button>
+                    </div>
+                       
+                </form>
+            </div>
+              
+
+        </div>
+    </div>
+    <input type="file" id="file-input" style="display: none;">
+    <script src="{%static 'js/settings.js'%}"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+</html>
