@@ -125,7 +125,7 @@ header.remove{
     background:transparent;
     padding: 20px;
 }
-.search-btn{
+.search{
     position: absolute;
     right: 0;
     top: 0;
@@ -140,10 +140,9 @@ header.remove{
     cursor: pointer;
 
 }
-.search-btn ion-icon{
-    font-size: 1em;
+.search ion-icon{
+    font-size: 1.5rem;
     color: #000000;
-    transition: .2s ease;
 }
 .navbar{
     background-color: #FFE45E;

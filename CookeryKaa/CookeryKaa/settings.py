@@ -101,7 +101,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'CookeryKaa',
         'USER': 'postgres',
-        'PASSWORD' : '$#!$#!Rpostgre',
+        'PASSWORD' : '5515',
         'HOST' : 'localhost'
     }
 }

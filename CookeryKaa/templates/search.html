@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bookmark.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+<body>
+    <header id="header">
+        <a href="{% url 'index' %}"><img class="logo" src="{% static 'img/assests/flogo.png' %}" alt="Logo"></a>
+        <div class="search_box">
+            <form method="GET" action="{% url 'search' %}">
+                <input type="text" name="query" placeholder="I am craving...." value="{{ query }}" />
+                <button class="search" type="submit"><ion-icon name="search"></ion-icon></button>
+            </form>
+        </div>
+        <div class="sidekoelements">
+            <button id="notification-btn" class="hideOnMobile">
+                <ion-icon name="notifications"></ion-icon>
+            </button>
+            <button id="bookmark-btn" class="hideOnMobile">
+                <ion-icon name="bookmark"></ion-icon>
+            </button>
+            <button id="login-btn-popup" class="hideOnMobile">
+                <ion-icon name="person"></ion-icon>
+            </button>
+            <button id="menu">
+                <ion-icon name="menu-outline"></ion-icon>
+            </button>
+        </div>
+    </header>
+    <nav class="navbar" id="navbar">
+        <div class="nav_element">
+            <a href="#"class="">Popular</a>
+                <ul class="dropdown">
+                    <li><a href="Addreceipepage.html" target="recipeFrame">Add Recipe</a></li>
+                    <li><a href="#">Link 2</a></li>
+                </ul>
+
+        </div>
+        <div class="nav_element">
+            <a href="#"class="">Meals</a> 
+                <ul class="dropdown">
+                    <li><a href="{% url 'category_recipes' 'breakfast' %}">Breakfast</a></li>
+                    <li><a href="{% url 'category_recipes' 'lunch' %}">Lunch</a></li>
+                    <li><a href="{% url 'category_recipes' 'dinner' %}">Dinner</a></li>
+                </ul>
+            </div>
+            <div class="nav_element">
+                <a href="#"class="">Ocassions</a>
+                <ul class="dropdown">
+                    <li><a href="{% url 'category_recipes' 'dashain' %}">Dashain</a></li>
+                    <li><a href="{% url 'category_recipes' 'tihar' %}">Tihar</a></li>
+                    <li><a href="{% url 'category_recipes' 'maghi' %}">Maghi</a></li>
+                    <li><a href="{% url 'category_recipes' 'birthday' %}">Birthday</a></li>
+                    <li><a href="{% url 'category_recipes' 'new year' %}">New Year</a></li>
+                </ul>
+            </div>
+            <div class="nav_element">    
+                <a href="#"class="">Cusines</a>
+                <ul class="dropdown">
+                    <li><a href="{% url 'category_recipes' 'nepali' %}">Nepali</a></li>
+                    <li><a href="{% url 'category_recipes' 'indian' %}">Indian</a></li>
+                    <li><a href="{% url 'category_recipes' 'chinese' %}">Chinese</a></li>
+                    <li><a href="{% url 'category_recipes' 'italian' %}">Italian</a></li>
+                </ul>
+            </div>
+            <div class="nav_element">
+                <a href="#"class="">Seasonal</a>
+                <ul class="dropdown">
+                    <li><a href="{% url 'category_recipes' 'spring' %}">Spring</a></li>
+                    <li><a href="{% url 'category_recipes' 'fall' %}">Fall</a></li>
+                    <li><a href="{% url 'category_recipes' 'summer' %}">Summer</a></li>
+                    <li><a href="{% url 'category_recipes' 'winter' %}">Winter</a></li>
+                </ul>
+            </div>
+            <div class="nav_element">
+                <a href="#"class="">Kitchen Wares</a>
+                <ul class="dropdown">
+                    <li><a href="#">Link 1</a></li>
+                    <li><a href="#">Link 2</a></li>
+                </ul>
+            </div>
+            <div class="nav_element">    
+                <a href="#"class="">Contact Us</a>
+            </div>
+            
+        </nav>
+    </nav>
+    <nav class="sidebar" id="sidebar">
+        <!-- Sidebar content -->
+        <button id="close-sidebar"><ion-icon name="close"></ion-icon></button>
+      <a href="#">Popular</a>
+      <a href="#">Meals</a>
+      <a href="#">Occasions</a>
+      <a href="#">Cuisines</a>
+      <a href="#">Seasonal</a>
+      <a href="#">Kitchen Wares</a>
+      <a href="#">Contact Us</a>
+      <button id="notification-btn-sb"><ion-icon name="notifications"></ion-icon></button>
+      <button id="bookmark-btn-sb"><ion-icon name="bookmark"></ion-icon></button>
+      <button id="login-btn-popup-sb"><ion-icon name="person"></ion-icon></button>
+    
+    </nav>
+    
+   <!--... (rest of the HTML remains the same)... -->
+
+<div class="container">
+    {% if results %}
+        <div class="card__container" id="card-container">
+            {% for result in results %}
+                <article class="card__article">
+                    {% if result.photo %}
+                        <img src="{{ result.photo.url }}" alt="{{ result.name }}" class="card__img">
+                    
+                     {% else %}
+                        <p id="nopicmsg">No photo available</p>
+                     {% endif %}
+                    <div class="card__data">
+                        <h2 class="card__title">{{ result.name }}</h2>
+                        <p>{{ result.description }}</p>
+                        <a href="#" class="card__button">Read More</a>
+                    </article>
+                    {% endfor %}    
+        </div>
+        
+    {% else %}
+        <div id="animation-container">
+            <dotlottie-player 
+              src="https://lottie.host/a697b33c-ed1b-457c-80da-c3b59aa81c50/HJkLDwx1kO.json" 
+              background="transparent" 
+              speed="1" 
+              style="width: 400px; height: 400px;" 
+              loop autoplay>
+            </dotlottie-player>
+            <p>No recipes found matching your query.</p>
+        </div>
+    {% endif %}
+    
+</div>
+
+<!--... (rest of the HTML remains the same)... -->
+
+
+    <!-- Hidden file input element -->
+    <input type="file" id="file-input" style="display: none;">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+</body>
+</html>

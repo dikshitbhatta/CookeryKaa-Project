@@ -27,10 +27,13 @@
     <header id="header">
         <a href="#"><img class="logo" src="{%static 'img/assests/flogo.png'%}"></a>
         <div class="search_box">
-            <input type="text" placeholder="I am craving....">
-            <button class = "search-btn"><ion-icon name="search"></ion-icon></button>
-            <a href="#"></a>
-        </div>
+          <form method="get" action="{%url 'search'%}">
+              <input type="text" placeholder="I am craving...." name="query" required>
+              <button class="search" type="submit"><ion-icon name="search"></ion-icon></button>
+              
+          </form>
+          <!-- <ul id="suggestions" style="border: 1px solid #ccc; display: none;"></ul> -->
+      </div>
         <div class="sidekoelements">
           {% if user.is_authenticated %}
               
@@ -81,37 +84,37 @@
             <div class="nav_element">
                 <a href="#"class="">Meals</a> 
                 <ul class="dropdown">
-                    <li><a href="#">Breakfast</a></li>
-                    <li><a href="#">Lunch</a></li>
-                    <li><a href="#">Dinner</a></li>
+                    <li><a href="{% url 'category_recipes' 'breakfast' %}">Breakfast</a></li>
+                    <li><a href="{% url 'category_recipes' 'lunch' %}">Lunch</a></li>
+                    <li><a href="{% url 'category_recipes' 'dinner' %}">Dinner</a></li>
                 </ul>
             </div>
             <div class="nav_element">
                 <a href="#"class="">Ocassions</a>
                 <ul class="dropdown">
-                    <li><a href="#">Dashain</a></li>
-                    <li><a href="#">Tihar</a></li>
-                    <li><a href="#">Maghi</a></li>
-                    <li><a href="#">Birthday</a></li>
-                    <li><a href="#">New Year</a></li>
+                    <li><a href="{% url 'category_recipes' 'dashain' %}">Dashain</a></li>
+                    <li><a href="{% url 'category_recipes' 'tihar' %}">Tihar</a></li>
+                    <li><a href="{% url 'category_recipes' 'maghi' %}">Maghi</a></li>
+                    <li><a href="{% url 'category_recipes' 'birthday' %}">Birthday</a></li>
+                    <li><a href="{% url 'category_recipes' 'new year' %}">New Year</a></li>
                 </ul>
             </div>
             <div class="nav_element">    
                 <a href="#"class="">Cusines</a>
                 <ul class="dropdown">
-                    <li><a href="#">Nepali</a></li>
-                    <li><a href="#">Indian</a></li>
-                    <li><a href="#">Chinese</a></li>
-                    <li><a href="#">Italian</a></li>
+                    <li><a href="{% url 'category_recipes' 'nepali' %}">Nepali</a></li>
+                    <li><a href="{% url 'category_recipes' 'indian' %}">Indian</a></li>
+                    <li><a href="{% url 'category_recipes' 'chinese' %}">Chinese</a></li>
+                    <li><a href="{% url 'category_recipes' 'italian' %}">Italian</a></li>
                 </ul>
             </div>
             <div class="nav_element">
                 <a href="#"class="">Seasonal</a>
                 <ul class="dropdown">
-                    <li><a href="#">Spring</a></li>
-                    <li><a href="#">Fall</a></li>
-                    <li><a href="#">Summer</a></li>
-                    <li><a href="#">Winter</a></li>
+                    <li><a href="{% url 'category_recipes' 'spring' %}">Spring</a></li>
+                    <li><a href="{% url 'category_recipes' 'fall' %}">Fall</a></li>
+                    <li><a href="{% url 'category_recipes' 'summer' %}">Summer</a></li>
+                    <li><a href="{% url 'category_recipes' 'winter' %}">Winter</a></li>
                 </ul>
             </div>
             <div class="nav_element">
@@ -238,7 +241,7 @@
                 
                 <div class="button-container-2">
                   <span class="mas">REGISTER</span>
-                  <button type="button" name="Hover">REGISTER</button>
+                  <button type="submit" name="register">REGISTER</button>
                 </div>
                 <div class="login-register">
                     <p>Already have an account?
