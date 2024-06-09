@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{%static 'css/style.css'%}"/>
     <link rel="stylesheet" href="{%static 'css/recipie.css'%}"/>
     <link rel="stylesheet" href="{%static 'css/profiledrop.css'%}"/>
+    <link rel="stylesheet" href="{%static 'css/feed.css'%}">
     <link rel="stylesheet" href="{%static 'css/notifications.css' %}">
 {% comment %} 
      <iframe name="recipeFrame" id="recipeFrame" src="" frameborder="0"
@@ -43,9 +44,11 @@
               </button>
 
               <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
+
               <div class="profile-icon" onclick="menuToggle()" >
                 <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
               </div>
+              
           {% else %}
               <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
           {% endif %}
@@ -327,6 +330,7 @@
 
     <div class="container swiper">
       <div class="slide-container">
+        <span class="Recipe_day">Recipes of the day</span>
         <div class="card-wrapper swiper-wrapper">
           <div class="card swiper-slide">
             <div class="image-box">
@@ -435,6 +439,11 @@
           </ul>
       </div>
   </div>
+
+  <div id="feed">
+    {% include 'templates/feed.html' %}
+  </div>
+
     <script>
     function menuToggle(){
         const toggleMenu = document.querySelector('.menu');
@@ -446,6 +455,7 @@
     <script src="{%static 'js/swiper-bundle.min.js'%}"></script>
     <script src="{%static 'js/script.js'%}"></script>
     <script src="{%static 'js/story.js'%}"></script>
+    <script src="{% static 'js/feed.js' %}"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
