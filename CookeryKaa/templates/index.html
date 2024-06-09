@@ -48,7 +48,7 @@
               <div class="profile-icon" onclick="menuToggle()" >
                 <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
               </div>
-              
+
           {% else %}
               <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
           {% endif %}
@@ -123,12 +123,15 @@
             <div class="nav_element">
                 <a href="#"class="">Kitchen Wares</a>
                 <ul class="dropdown">
-                    <li><a href="#">Link 1</a></li>
-                    <li><a href="#">Link 2</a></li>
+                  <li><a href="#">Prep Tool & Essentials</a></li>
+                  <li><a href="#">Cookware and Bakeware</a></li>
+                  <li><a href="#">Cooking Tool & Kitchen Utensils</a></li>
+                  <li><a href="#">Appliances</a></li>
+                  <li><a href="#">Other Kitchen Essentials</a></li>
                 </ul>
             </div>
             <div class="nav_element">    
-                <a href="#"class="">Contact Us</a>
+                <a href="Contactus.html"class="">Contact Us</a>
             </div>
             
         </nav>

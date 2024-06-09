@@ -397,8 +397,8 @@ header.remove{
   .card__article {
     position: relative;
     overflow: hidden;
-    max-width: 320px;
-    max-height: 225px;
+    min-width: 320px;
+    min-height: 225px;
   }
   
   .card__img {
