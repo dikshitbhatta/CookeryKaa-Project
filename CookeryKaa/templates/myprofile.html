@@ -45,7 +45,6 @@
     </style>
 </head>
 <body>
-    {% csrf_token %}
     <iframe id="recipeIframe" src="http://localhost:8000/addrecipe/" frameborder="0"></iframe>    
     <header id="header">
         <a href="{% url 'index' %}"><img class="logo" src="{% static 'img/assests/flogo.png' %}" alt="Logo"></a>
