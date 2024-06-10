@@ -12,6 +12,7 @@
     <title >Cookeryकाँ</title>
     <link rel="icon" type="image/x-icon" href="{%static 'img/assets/logo.png'%}">
   <!-- Swiper CSS -->
+
     <link rel="stylesheet" href="{%static 'css/swiper-bundle.min.css'%}" />
     <link rel="stylesheet" href="{%static 'css/style.css'%}"/>
     <link rel="stylesheet" href="{%static 'css/recipie.css'%}"/>
@@ -121,7 +122,7 @@
                 </ul>
             </div>
             <div class="nav_element">
-                <a href="#"class="">Kitchen Wares</a>
+                <a href="{% url 'kitchenware'%}"class="">Kitchen Wares</a>
                 <ul class="dropdown">
                   <li><a href="#">Prep Tool & Essentials</a></li>
                   <li><a href="#">Cookware and Bakeware</a></li>
@@ -131,7 +132,7 @@
                 </ul>
             </div>
             <div class="nav_element">    
-                <a href="Contactus.html"class="">Contact Us</a>
+                <a href="{% url 'contactus' %}"class="">Contact Us</a>
             </div>
             
         </nav>
@@ -443,9 +444,11 @@
       </div>
   </div>
 
-  <div id="feed">
-    {% include 'templates/feed.html' %}
+  <div id="feed"> 
+  {% include "templates/feed.html" with posts=posts%}
   </div>
+    
+
 
     <script>
     function menuToggle(){

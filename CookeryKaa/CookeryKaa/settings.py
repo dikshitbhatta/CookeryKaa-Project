@@ -92,6 +92,9 @@ AUTHENTICATION_BACKENDS = [
 
 WSGI_APPLICATION = 'CookeryKaa.wsgi.application'
 
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
+
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

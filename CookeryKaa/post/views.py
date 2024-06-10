@@ -177,6 +177,11 @@ def rate_post(request, post_id, rating_value):
 def mybookmark(request):
     return render(request,'bookmark.html')
 
+def contactus(request):
+    return render(request,'contactus.html')
+
+def kitchenware(request):
+    return render (request,'kitchenware.html')
 
 def myprofile(request):
     user = request.user

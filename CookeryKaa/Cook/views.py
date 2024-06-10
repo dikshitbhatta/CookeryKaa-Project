@@ -7,12 +7,21 @@ from .forms import UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.hashers import check_password
 from .models import Profile
 from notifications.models import Notification
+from post.models import Stream,Recipe,Likes
+from django.db.models import Count
 
 # Create your views here.
 def index(request):
     notification_count = 0
     if request.user.is_authenticated:
+        streams = Stream.objects.filter(user=request.user).annotate(like_count=Count('recipe__post_like'))
+        posts = Recipe.objects.exclude(user=request.user).annotate(like_count=Count('post_like')).order_by('-posted')
+        user_likes = Likes.objects.filter(user=request.user)
+        liked_posts = [like.recipe.id for like in user_likes]
         notification_count = Notification.objects.filter(user=request.user,is_seen=False).count()
+    else:
+        posts=Recipe.objects.all().annotate(like_count=Count('post_like')).order_by('-posted')
+        liked_post=[]
     if request.method == 'POST':
         if 'register' in request.POST:
             return handle_register(request)
@@ -23,7 +32,12 @@ def index(request):
             messages.error(request, "Invalid request")
             return redirect('index')
     return render(request, 'index.html',{
-        'notification_count': notification_count
+        'notification_count': notification_count,
+        'posts':posts,
+        'liked_posts':liked_posts
+        
+
+
     })
 
 

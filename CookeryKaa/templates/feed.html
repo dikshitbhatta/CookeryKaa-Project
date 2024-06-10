@@ -1,21 +1,23 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Feed</title>
-    <link rel="stylesheet" href="{%static 'css/feed.css'%}">
+    <link rel="stylesheet" href="{% static 'css/feed.css' %}">
     <meta name="csrf-token" content="{{ csrf_token }}">
     <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
     <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
-
 </head>
 <body>
-    <div class="container">
-        <h1>NEWS FEED</h1>
-        <div class="content">
-            <div class="feed">
+    {% load static %}
+
+<div class="container">
+    <h1>NEWS FEED</h1>
+    <div class="content">
+        <div class="feed">
+
                 {% for post in posts %}
                     <div class="post" id="post-{{ post.pk }}">
                         <div class="post-header">
@@ -26,35 +28,20 @@
                             </div>
                             <div class="user-info">
                                 <a href="{% url 'otherprofile' post.user.id %}">
-                                    <span class="username">{{post.user.username}}</span>
+                                    <span class="username">{{ post.user.username }}</span>
                                 </a>
                                 <div class="time">
-                                <span class="clock"></span>
-                                <span class="posttime">{{post.posted}}</span>
+                                    <span class="clock"></span>
+                                    <span class="posttime">{{ post.posted }}</span>
                                 </div>
                             </div>
                             <div class="menu">...
                                 <ul class="dropdown">
-                                    <li><a href="#">
-                                        <ion-icon name="bookmark"></ion-icon>
-                                        Save this post
-                                    </a></li>
-                                    <li><a href="#">
-                                        <ion-icon name="notifications-outline"></ion-icon>
-                                        Turn on notification
-                                    </a></li>
-                                    <li><a href="#">
-                                        <ion-icon name="person-remove-outline"></ion-icon>
-                                        Unfollow user
-                                    </a></li>
-                                    <li><a href="#">
-                                        <ion-icon name="trash-bin-outline"></ion-icon>
-                                        Report Recipe
-                                    </a></li>
-                                    <li><a href="#">
-                                        <ion-icon name="restaurant-outline"></ion-icon>
-                                        Block user
-                                    </a></li>
+                                    <li><a href="#"><ion-icon name="bookmark"></ion-icon> Save this post</a></li>
+                                    <li><a href="#"><ion-icon name="notifications-outline"></ion-icon> Turn on notification</a></li>
+                                    <li><a href="#"><ion-icon name="person-remove-outline"></ion-icon> Unfollow user</a></li>
+                                    <li><a href="#"><ion-icon name="trash-bin-outline"></ion-icon> Report Recipe</a></li>
+                                    <li><a href="#"><ion-icon name="restaurant-outline"></ion-icon> Block user</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -69,10 +56,10 @@
                         </div>
                         <div class="post-interactions">
                             <div class="reaction">
-                                <button class="love-button" id="love-{{post.pk}}" data-postid="{{ post.pk }}">
+                                <button class="love-button" id="love-{{ post.pk }}" data-postid="{{ post.pk }}">
                                     <ion-icon class="heart-fill" name="{% if post.pk in liked_posts %}heart{% else %}heart-outline{% endif %}"></ion-icon>
                                 </button>
-                                <span class="reaction_count" id="reaction_count-{{post.pk}}">{{ post.like_count }}</span>
+                                <span class="reaction_count" id="reaction_count-{{ post.pk }}">{{ post.like_count }}</span>
                             </div>
                             <button id="comment">
                                 <img src="{% static 'img/reactions/comment.png' %}">
@@ -90,43 +77,44 @@
                                     <span class="star" data-value="3" data-postid="{{ post.pk }}">★</span>
                                     <span class="star" data-value="4" data-postid="{{ post.pk }}">★</span>
                                     <span class="star" data-value="5" data-postid="{{ post.pk }}">★</span>
-                                </div> 
+                                </div>
                             </div>
-                            <div class="ratingValue" id="ratingValue-{{post.pk}}"></div>
+                            <div class="ratingValue" id="ratingValue-{{ post.pk }}"></div>
                             <p>{{ post.description }}</p>
                         </div>
                     </div>
                 {% endfor %}
+        </div>
+        <div class="sidebar_right">
+            <div class="advertisement">
+                <input type="file" accept="image/*,video/*">
             </div>
-            <div class="sidebar_right">
-                <div class="advertisement">
-                    <input type="file" accept="image/*,video/*">
+            <div class="suggestions">
+                <h3>Suggested for you</h3>
+                <div class="suggestion">
+                    <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
                 </div>
-                <div class="suggestions">
-                    <h3>Suggested for you</h3>
-                    <div class="suggestion">
-                        <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
-                    </div>
-                    <div class="suggestion">
-                        <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
-                    </div>
-                    <div class="suggestion">
-                        <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
-                    </div>
-                    <div class="suggestion">
-                        <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
-                    </div>
+                <div class="suggestion">
+                    <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
                 </div>
-                <div class="footer">
-                    <a href="#">About</a> · 
-                    <a href="#">Terms</a> · 
-                    <a href="#">Advertise</a> · 
-                    <a href="#">Privacy</a> · 
-                    <a href="#">Help</a>
+                <div class="suggestion">
+                    <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
                 </div>
+                <div class="suggestion">
+                    <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
+                </div>
+            </div>
+            <div class="footer">
+                <a href="#">About</a> · 
+                <a href="#">Terms</a> · 
+                <a href="#">Advertise</a> · 
+                <a href="#">Privacy</a> · 
+                <a href="#">Help</a>
             </div>
         </div>
     </div>
-    <script src="{% static 'js/feed.js' %}"></script>
+</div>
+<script src="{% static 'js/feed.js' %}"></script>
+
 </body>
 </html>
