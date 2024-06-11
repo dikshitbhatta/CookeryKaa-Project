@@ -6,15 +6,27 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.hashers import check_password
 from .models import Profile
+from django.db.models import Count
+from post.models import Recipe, Bookmark, Likes, Stream, Follow
 from notifications.models import Notification
 
 # Create your views here.
 def index(request):
     notification_count = 0
     notifications = []
+    posts = []
+    streams = []
+    user_likes = []
+    liked_posts = []
+    bookmarked_recipes = []
     if request.user.is_authenticated:
         notification_count = Notification.objects.filter(user=request.user,is_seen=False).count()
         notifications = Notification.objects.filter(user=request.user).order_by('-date')
+        streams = Stream.objects.filter(user=request.user).annotate(like_count=Count('recipe__post_like'))
+        posts = Recipe.objects.exclude(user=request.user).annotate(like_count=Count('post_like')).order_by('-posted')
+        user_likes = Likes.objects.filter(user=request.user)
+        liked_posts = [like.recipe.id for like in user_likes]
+        bookmarked_recipes = list(Bookmark.objects.filter(user=request.user).values_list('recipe_id', flat=True))
 
     if request.method == 'POST':
         if 'register' in request.POST:
@@ -27,7 +39,11 @@ def index(request):
             return redirect('index')
     return render(request, 'index.html',{
         'notification_count': notification_count,
-        'notifications' : notifications
+        'notifications' : notifications,
+        'posts': posts,
+        'liked_posts':liked_posts,
+        'bookmarked_recipes':bookmarked_recipes,
+        'streams' : streams
     })
 
 

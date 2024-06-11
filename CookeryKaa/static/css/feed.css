@@ -7,21 +7,8 @@
 }
 
 body {
-<<<<<<< Updated upstream
-   display: flex;
-   flex-direction: column;
-   margin-top: 400px;
-=======
-   display:flex;
-   flex-direction: column;
-   margin-top: 40px;
-   min-height: 100vh;
-
->>>>>>> Stashed changes
    font-family: Arial, sans-serif;
    background-color: #e6f0ff;
-   min-height: 100vh;
-   
 }
 
 .container {
@@ -36,21 +23,20 @@ h1 {
 .content {
    display: flex;
    justify-content: space-between;
-   flex-wrap: wrap;
    
 }
 
 .feed {
-   flex: 1;
-   position: absolute;
-   width: 73%;
+   width: 100%;
+   height: 100%;
+   max-height: 300px;
    background-color: #7fc8f8;
 }
 
 .sidebar_right {
    position: absolute;
-   right: -370px;
-   margin-top: -700px;
+   right: -335px;
+   margin-top: -780px;
    background-color: #7fc8f8;
    padding: 10px;
    border-radius: 10px;
@@ -65,7 +51,10 @@ h1 {
    background-color: #D9D9D9;
    border-radius: 10px;
    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-   margin: 20px 100px;
+   margin-top: 20px;
+   margin-left: 100px;
+   margin-right: 100px;
+   margin-bottom: 20px;
    padding: 20px;
 }
 
@@ -97,20 +86,7 @@ h1 {
    margin-left: 10px;
    font-style: normal;
    font-size: 20px;
-   cursor: pointer;
 }
-
-.username:hover {
-   text-decoration: underline blue;
-}
-
-.username a {
-   color: inherit;
-   text-decoration: none;
-}
-
-
-
 
 .time{
    display: flex;
@@ -129,7 +105,7 @@ h1 {
    height: 15px;
    border-radius:100%;
    border: 2px solid transparent;
-   box-shadow: 0 0 0 2px currentColor;
+   box-shadow: 0 0 0 2px currentColor
 }
 .clock::after{
    content: "";
@@ -208,6 +184,8 @@ h1 {
 
 .post-image {
    width: 100%;
+   height: 100%;
+   height: 450px;
    border-radius: 10px;
 }
 
@@ -343,37 +321,8 @@ fill:#DF2957;
 .footer a:hover {
    text-decoration: underline;
 }
-<<<<<<< Updated upstream
-
-@media (max-width: 968px) {
+@media (max-width: 1230px) {
    .sidebar_right {
      display: none;
  }
 }
-=======
-.bookmark-icon {
-   padding: 5px 5px;
-   cursor: pointer;
-   position: absolute;
-   top: 10px;
-   right: 10px;
-   font-size: 1.8em;
-   color: #000000;
-}
-
-.bookmark-icon .filled {
-   display: none;
-}
-
-.bookmark-icon.clicked .filled {
-   display: block;
-}
-
-.bookmark-icon .outline {
-   display: block;
-}
-
-.bookmark-icon.clicked .outline {
-   display: none;
-}
->>>>>>> Stashed changes

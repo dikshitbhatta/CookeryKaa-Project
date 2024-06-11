@@ -17,13 +17,9 @@ urlpatterns = [
     path('add_review/<int:pk>', add_review, name='add_review'),
     path('bookmark_recipe/',bookmark_recipe, name='bookmark_recipe'),
     path('search/',views.search,name='search'),
-<<<<<<< Updated upstream
     path('category/<str:category_name>/', views.category_recipes, name='category_recipes'),
-    
-=======
     #path('get-comments/<int:recipe_id>/', views.get_comments, name='get_comments'),
     path('add-comment/<int:pk>/', views.add_comment, name='add_comment'),
     path('delete_recipe/<int:pk>/',views.delete_recipe, name="delete_recipe")
->>>>>>> Stashed changes
 ]
     

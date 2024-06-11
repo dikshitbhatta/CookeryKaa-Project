@@ -1,6 +1,6 @@
-
-{%load static%}
+{% load static %}
 {% load socialaccount %}
+{% load custom_filters %}
 
 
 <!DOCTYPE html>
@@ -16,12 +16,9 @@
     <link rel="stylesheet" href="{%static 'css/style.css'%}"/>
     <link rel="stylesheet" href="{%static 'css/recipie.css'%}"/>
     <link rel="stylesheet" href="{%static 'css/profiledrop.css'%}"/>
-<<<<<<< Updated upstream
     <link rel="stylesheet" href="{%static 'css/feed.css'%}">
     <link rel="stylesheet" href="{%static 'css/notifications.css' %}">
-=======
     <link rel="stylesheet" href="{% static 'css/notifications.css' %}"/>
->>>>>>> Stashed changes
 {% comment %} 
      <iframe name="recipeFrame" id="recipeFrame" src="" frameborder="0"
         width="800px"
@@ -452,15 +449,105 @@
           </ul>
       </div>
   </div>
-<<<<<<< Updated upstream
 
   <div id="feed">
-    {% include 'templates/feed.html' %}
+    <div class="container">
+      <h1>NEWS FEED</h1>
+      <div class="content">
+          <div class="feed">
+              {% for post in posts %}
+                  <div class="post" id="post-{{ post.pk }}">
+                      <div class="post-header">
+                          <div class="photo">
+                              <a href="{% url 'otherprofile' post.user.id %}">
+                                  <img src="{% if post.user.profile.picture %}{{ post.user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="user profile">
+                              </a>
+                          </div>
+                          <div class="user-info">
+                              <a href="{% url 'otherprofile' post.user.id %}">
+                                  <span class="username">{{post.user.username}}</span>
+                              </a>
+                              <div class="time">
+                              <span class="clock"></span>
+                              <span class="posttime">{{post.posted}}</span>
+                              </div>
+                          </div>
+                          
+                      </div>
+                      <div class="post-content">
+                          <a href="{% url 'recipe_detail' post.pk %}">
+                              {% if post.photo %}
+                                  <img src="{{ post.photo.url }}" alt="post image" class="post-image">
+                              {% else %}
+                                  <img src="{% static 'img/assests/default_photo.png' %}" alt="default post image" class="post-image">
+                              {% endif %}
+                          </a>
+                      </div>
+                      <div class="post-interactions">
+                          <div class="reaction">
+                              <button class="love-button" id="love-{{ post.pk }}" data-postid="{{ post.pk }}">
+                                  <ion-icon class="heart-fill" name="{% if post.pk in liked_posts %}heart{% else %}heart-outline{% endif %}"></ion-icon>
+                              </button>
+                              <span class="reaction_count" id="reaction_count-{{ post.pk }}">{{ post.like_count }}</span>
+                          </div>
+                          <button id="comment">
+                              <img src="{% static 'img/reactions/comment.png' %}">
+                          </button>
+                          <button id="share">
+                              <img src="{% static 'img/reactions/share.png' %}" alt="">
+                          </button>
+                          <div class="bookmark-icon clicked" id="bookmark-{{post.pk}}" data-postid="{{ post.pk }}">
+                              <ion-icon name="{% if post.pk in bookmarked_posts %}bookmark{% else %}bookmark-outline{% endif %}" class="filled" onclick="toggleBookmark(this)"></ion-icon>
+                          </div>
+                          
+                      </div>
+                      <div class="post-description">
+                          <div class="aba">
+                              <h3><a href="{% url 'recipe_detail' post.pk %}">{{ post.name }}</a></h3>
+                              <div class="rating_section">
+                                  {% for star in post.average_rating|times %}
+                                      <ion-icon name="star"></ion-icon>
+                                  {% endfor %}
+                              </div>
+                          <div class="ratingValue" id="ratingValue-{{post.pk}}"></div>
+                          <p>{{ post.description }}</p>
+                          </div>
+                      </div>
+                  </div>
+              {% endfor %}
+          </div>
+          <div class="sidebar_right">
+              <div class="advertisement">
+                  <input type="file" accept="image/*,video/*">
+              </div>
+              <div class="suggestions">
+                  <h3>Suggested for you</h3>
+                  <div class="suggestion">
+                      <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
+                  </div>
+                  <div class="suggestion">
+                      <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
+                  </div>
+                  <div class="suggestion">
+                      <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
+                  </div>
+                  <div class="suggestion">
+                      <img src="suggested_user.jpg" alt="Suggested Profile" class="profile-pic">
+                  </div>
+              </div>
+              <div class="footer">
+                  <a href="#">About</a> · 
+                  <a href="#">Terms</a> · 
+                  <a href="#">Advertise</a> · 
+                  <a href="#">Privacy</a> · 
+                  <a href="#">Help</a>
+              </div>
+          </div>
+      </div>
+  </div>
   </div>
 
-=======
   
->>>>>>> Stashed changes
     <script>
     function menuToggle(){
         const toggleMenu = document.querySelector('.menu');

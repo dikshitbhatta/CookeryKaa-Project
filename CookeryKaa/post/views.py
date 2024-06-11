@@ -63,13 +63,10 @@ def add_recipe(request):
         categories = Category.objects.filter(name__in=category_names)
         #print(categories)
         recipe.categories.set(categories)
-<<<<<<< Updated upstream
 
 
-=======
         #print(recipe.categories)
         #print(categories)
->>>>>>> Stashed changes
         
         return redirect('recipe_detail', pk=recipe.pk)
 
@@ -269,13 +266,11 @@ def search(request):
     ).distinct()
     return render(request, 'search.html', {'results': results, 'query': query})
 
-<<<<<<< Updated upstream
 def category_recipes(request, category_name):
     category = get_object_or_404(Category, name__iexact=category_name)
     recipes = Recipe.objects.filter(categories=category).distinct()
     
     return render(request, 'category.html', {'category': category, 'recipes': recipes})
-=======
 
 # def get_comments(request, recipe_id):
 #     recipe = get_object_or_404(Recipe, pk=recipe_id)
@@ -348,4 +343,3 @@ def get_follow_counts(request):
     followers_count = Follow.objects.filter(following=request.user).count()
     following_count = Follow.objects.filter(follower=request.user).count()
     return JsonResponse({'followers_count': followers_count, 'following_count': following_count})
->>>>>>> Stashed changes
