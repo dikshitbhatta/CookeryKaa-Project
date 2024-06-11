@@ -11,8 +11,11 @@ from notifications.models import Notification
 # Create your views here.
 def index(request):
     notification_count = 0
+    notifications = []
     if request.user.is_authenticated:
         notification_count = Notification.objects.filter(user=request.user,is_seen=False).count()
+        notifications = Notification.objects.filter(user=request.user).order_by('-date')
+
     if request.method == 'POST':
         if 'register' in request.POST:
             return handle_register(request)
@@ -23,7 +26,8 @@ def index(request):
             messages.error(request, "Invalid request")
             return redirect('index')
     return render(request, 'index.html',{
-        'notification_count': notification_count
+        'notification_count': notification_count,
+        'notifications' : notifications
     })
 
 
@@ -49,7 +53,7 @@ def handle_register(request):
         my_user = User.objects.create_user(uname,email,pass1)
         my_user.save()
         #Creating a profile object
-        Profile.objects.create(user=my_user)
+        Profile.objects.create(user=my_user, picture = 'profile_pictures/default.png')
         messages.success(request,"User Created Successfuly")
         return redirect('index')
 
@@ -110,7 +114,7 @@ def editprofile(request):
         profile.save()
 
         messages.success(request, 'Your profile was successfully updated!')
-        return render(request,'profile.html')
+        return render(request,'myprofile.html')
 
     return render(request, 'settings.html', {
         'user': user,

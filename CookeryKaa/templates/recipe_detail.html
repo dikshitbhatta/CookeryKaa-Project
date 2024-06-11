@@ -1,5 +1,6 @@
 {% load static %}
-{%load custom_filters%}
+{% load custom_filters %}
+{% load star_rating %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,9 +54,26 @@
         <button id="login-btn-popup-sb"><ion-icon name="person"></ion-icon></button>
     </nav>
     <div class="information">
+        <div id="google_translate_element"></div>
+        <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        <script>
+           function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'om',
+            includedLanguages: 'en,ne,hi,zh-CN,es,ar,nl,pt,de,fr',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+        }
+        </script>
         <div class="upper">
             <h1 class="title">{{ recipe.name }}</h1>
-            <div class="rating">★★★★★</div>
+            <div class="rating">
+                {% for star in recipe.average_rating|times %}
+                    <ion-icon name="star"></ion-icon>
+                {% endfor %}
+                
+
+            </div>
             <div class="author">
                 <a href="{% url 'otherprofile' recipe.user.id %}"><img src="{{ recipe.user.profile.picture.url }}" alt="profile" class="avatar"></a>
                 <a class="name" href="{% url 'otherprofile' recipe.user.id %}"><span class="name">{{ recipe.user.username }}</span></a>
@@ -90,8 +108,8 @@
                 </li>
             </div>
         </div>
-    </div>
-    <div class="steps">
+        </div>
+     <div class="steps">
         <div class="directions">
             <h2>PREPARATION</h2>
             <ul>
@@ -111,7 +129,10 @@
                     <h3>Step {{ forloop.counter }}</h3>
                     <span class="step-content">
                         {% if direction.photo %}
-                            <img src="{{ direction.photo.url }}" alt="Step {{ forloop.counter }}">
+                            <img src="{{ direction.photo.url }}" alt="Step {{ forloop.counter }}"
+                            data-step="{{forloop.counter}}"
+                            data-photo="{{direction.photo.url}}"
+                            data-step-text="{{direction.step}}">
                             <button class="expand"><ion-icon name="expand-outline"></ion-icon></button>
                         {% endif %}
                     </span>
@@ -130,50 +151,62 @@
             </ul>
         </div>
     </div>
+
+
+
     <div class="comment_reviewSection">
         <div class="questions-replies">
             <h2>Questions and Replies</h2>
-            <div class="search-bar">
-                <img src="{% if user.is_authenticated %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="" class="avatar">
-
-                <form method="post" action="{% url 'add_question' recipe.pk %}">
+            <div class="add-comment search-bar">
+                {%if user.is_authenticated %}
+                <img src="{{user.profile.picture.url}}" alt="" class="avatar">
+                <form id="comment-form" method="post" action="{% url 'add_comment' recipe.pk %}">
                     {% csrf_token %}
-                    {{ question_form.as_p }}
-                    {% if user.is_authenticated %}
-                        <button type="submit" class="button">Submit</button>
-                    {% else %}
-                        <button type="button" class="button">SIGN IN</button>
-                    {% endif %}
+                    <input id="new-comment" name="text" class="inputPlace" type="text" placeholder="Ask a question...">
+                    <button class="button" type="submit">POST</button>
                 </form>
+                {%endif%}
             </div>
-            <div class="question">
-                <img src="{{ question.user.profile.picture.url }}" alt="User Avatar" class="avatar">
-                <p>{{ question.text }}</p>
-                <div class="replies">
-                    {% for reply in question.replies.all %}
-                    <div class="reply">
-                        <img src="{{ reply.user.profile.picture.url }}" alt="User Avatar" class="avatar">
-                        <p>{{ reply.text }}</p>
+            <div id="comments-section">
+                {% for comment in comments %}
+                <div class="question" data-comment-id="{{ comment.id }}">
+                    <div class="question-content">
+                        <img src="{{ comment.user.profile.picture.url }}" alt="User Avatar" class="avatar">
+                        <p>{{ comment.text }}</p>
                     </div>
-                    {%endfor%}
-
-                    <div class="reply-form">
-                        <img src="{% if user.is_authenticated %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="" class="avatar">
-                        <form method="post" action="{% url 'add_reply' recipe.pk %}">
-                            {% csrf_token %}
-                            {{ reply_form.as_p }}
+                    <div class="actions">
+                        <button class="reply-button" onclick="showReplyForm({{ comment.id }})">Reply</button>
+                        <button class="view-replies-button" onclick="toggleReplies({{ comment.id }})">
+                            View replies ({{ comment.replies.count }})
+                        </button>
+                    </div>
+                    <div class="replies" style="display: none;">
+                        {% for reply in comment.replies.all %}
+                        <div class="reply">
+                            <img src="{{ reply.user.profile.picture.url }}" alt="Replier" class="avatar">
+                            <p>{{ reply.text }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="replyinput" id="replyinput-{{ comment.id }}" style="display: none;">
+                        <div class="reply-form">
                             {% if user.is_authenticated %}
-                                <button type="submit" class="button">Reply</button>
-                            {% else %}
-                                <button type="button" class="button">SIGN IN</button>
-                            {% endif %}
-                        </form>
+                            <img src="{{user.profile.picture}}" alt="" class="avatar">
+                            <form id="reply-form-{{ comment.id }}" method="post" action="{% url 'add_comment' recipe.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                <input type="text", name="text" placeholder="Add a reply..." class="reply-input">
+                                <button class="post-reply" type="submit">Post</button>
+                            </form>
+                            {%endif%}
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
 
-        <div class="reviews">
+        {% comment %} <div class="reviews">
             <h2>Reviews</h2>
             <div class="review">
                 <img src="{% if user.is_authenticated %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Reviewer" class="avatar">
@@ -187,20 +220,68 @@
                     {% endif %}
                 </form>
             </div>
-            {% for review in reviews %}
-            <div class="review">
-                <img src="{{ review.user.profile.picture.url }}" alt="Reviewer" class="avatar">
-                <div class="review-content">
-                    <p>{{ review.text }}</p>
-                    <div class="review-rating">
-                        {% for star in review.rating|times %}
-                            <ion-icon name="star"></ion-icon>
-                        {% endfor %}
+            <div class="reviews">
+                {% for review in reviews %}
+                <div class="review">
+                    <img src="{{ review.user.profile.picture.url }}" alt="Reviewer" class="avatar">
+                    <div class="review-content">
+                        <p>{{ review.text }}</p>
+                        <div class="review-rating">
+                            {% for star in review.rating|times %}
+                                <ion-icon name="star"></ion-icon>
+                            {% endfor %}
+                        </div>
                     </div>
+                    
+                </div>
+                {% endfor %}
+            </div> {% endcomment %}
+
+
+            {% if user.is_authenticated %}
+            <div class="reviews">
+                <h2>Reviews</h2>
+                <div class="review">
+                    <img src="{{ user.profile.picture.url }}" alt="Reviewer" class="avatar">
+                    <form id="review-form-{{ review.pk }}" data-review-id="{{ review.pk }}" method="post" action="{% url 'add_review' recipe.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="rating" id="review-rating-{{ review.pk }}" value="0">
+                        <input name="text" class="inputPlace" placeholder="Leave a review..."></input>
+                        <div class="review-rating" id="star-rating-{{ review.pk }}">
+                            <div class="stars">
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>
+                                <ion-icon name="star"></ion-icon>        
+                              </div>
+                              <!-- Changed input type to text to make it visible -->
+                              <input type="text" id="rating-value" name="rating" value="0" style="display:none" />
+                        </div>
+                        <button type="submit" id="submit-review" class="button-review">Submit</button>
+                    </form>
                 </div>
             </div>
-            {% endfor %}
-        </div>
+            {% endif %}
+            
+
+                <div class="show-reviews">
+                    {% for review in reviews %}
+                    <div class="show-review">
+                        <img src="{{ review.user.profile.picture.url }}" alt="Reviewer" class="avatar">
+                        <div class="review-content">
+                            <p>{{ review.text }}</p>
+                            <div class="review-rating">
+                                {% for star in review.rating|times %}
+                                    <ion-icon name="star"></ion-icon>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
     </div>
 
 
@@ -217,44 +298,66 @@
     <div class="step-fullview">
         <div class="close-btn"><ion-icon name="close-outline"></ion-icon></div>
         <div class="content">
-            {% if direction.photo %}
-                <img src="{{direction.photo.url}}" alt="Step Image">
-                <h3>Step {{ forloop.counter }}</h3>
-                <p>{{direction.step}}</p>
-            {%endif%}
+            <img class="stepPhoto" src="" alt="">
+            <h3 class="stepNumber"></h3>
+            <p class="stepText"></p>
         </div>
     </div>
 
+
     <script src="{% static 'js/profile.js' %}"></script>
+    <script src="{% static 'js/recipe_detail.js' %}"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
     <script>
-        const vidExpandBtn = document.querySelector('.vidExpand');
-        const videoFullView = document.querySelector('.video-fullview');
-        const closeBtn = document.querySelector('.close-btn');
-        const video = document.querySelector('.video-fullview video');
-        const stepExpandBtns = document.querySelectorAll('.expand');
-        const stepFullView = document.querySelector('.step-fullview');
-        const StepcloseBtn = document.querySelector('.step-fullview .close-btn');
-
-        stepExpandBtns.forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                stepFullView.style.display = 'flex';
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.reply-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const commentId = button.closest('.question').dataset.commentId;
+                    const replyInputContainer = document.getElementById(`replyinput-${commentId}`);
+                    replyInputContainer.style.display = replyInputContainer.style.display === 'none' ? 'block' : 'none';
+                });
             });
-        });
+        
+            document.querySelectorAll('.view-replies-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const replies = button.closest('.question').querySelector('.replies');
+                    replies.style.display = replies.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+        
+            document.querySelectorAll('.post-reply').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent the default form submission
+                    const form = button.closest('form');
+                    const replyInput = form.querySelector('input[name="text"]');
+                    const replyText = replyInput.value;
+        
+                    if (replyText) {
+                        form.submit(); // Submit the form if the reply text is not empty
+                    }
+                });
+            });
+            const stars = document.querySelectorAll(".stars ion-icon");
 
-        StepcloseBtn.addEventListener('click', function() {
-            stepFullView.style.display = 'none';
+// Loop through the "stars" NodeList
+stars.forEach((star, index1) => {
+  // Add an event listener that runs a function when the "click" event is triggered
+  star.addEventListener("click", () => {
+    // Loop through the "stars" NodeList Again
+    stars.forEach((star, index2) => {
+      // Add the "active" class to the clicked star and any stars with a lower index
+      // and remove the "active" class from any stars with a higher index
+      index1 >= index2 ? star.classList.add("active") : star.classList.remove("active");
+    });
+  });
+});
         });
-
-        vidExpandBtn.addEventListener('click', () => {
-            videoFullView.style.display = 'block';
-        });
-
-        closeBtn.addEventListener('click', () => {
-            videoFullView.style.display = 'none';
-            video.pause(); // Pause the video playback when the container is closed
-        });
+        
+     
+        
+           
     </script>
 </body>
 </html>

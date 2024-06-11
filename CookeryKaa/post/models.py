@@ -1,7 +1,7 @@
 from django.db import models
 import uuid
 from django.contrib.auth.models import User
-
+from django.db.models import Avg
 from django.db.models.signals import post_save, post_delete
 from django.utils.text import slugify
 from django.urls import reverse
@@ -71,7 +71,15 @@ class Recipe(models.Model):
     preparation_time = models.CharField(max_length=100)
     cooking_time = models.CharField(max_length=100)
     posted = models.DateTimeField(auto_now_add=True)
+    average_rating = models.IntegerField(default=0)
     
+    
+    def update_average_rating(self):
+        average_rating = self.reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+        rounded_rating = round(average_rating)
+        self.average_rating = rounded_rating
+        self.save()
+        
     def __str__(self):
         return self.name
 
@@ -94,25 +102,27 @@ class Direction(models.Model):
     def __str__(self):
         return f"Step {self.step} for {self.recipe.name}"
     
+class Bookmark(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'recipe')
+
+    def __str__(self):
+        return f'{self.user} bookmarked {self.recipe}'
     
-class Question(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='questions')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questions')
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.user.username} - {self.recipe.name}'
-
-   
-class Reply(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='replies')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='replies')
-    text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.user.username} - {self.question.text[:20]}'
+        return self.text[:20]
 
     
 class Review(models.Model):

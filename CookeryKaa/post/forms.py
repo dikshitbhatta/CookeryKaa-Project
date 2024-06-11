@@ -1,17 +1,13 @@
 from django import forms
-from .models import Question, Reply, Review
+from .models import Review, Comment
 
-class QuestionForm(forms.ModelForm):
-    class Meta:
-        model = Question
-        fields = ['text']
-
-class ReplyForm(forms.ModelForm):
-    class Meta:
-        model = Reply
-        fields = ['text']
 
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['text', 'rating']
+        
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']

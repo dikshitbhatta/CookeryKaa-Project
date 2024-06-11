@@ -392,13 +392,26 @@ header.remove{
   .card__container {
     display: grid;
     row-gap: 3.5rem;
+    margin-top: 6rem;
+    margin-bottom: 5rem;
   }
   
   .card__article {
     position: relative;
     overflow: hidden;
+<<<<<<< Updated upstream
     min-width: 320px;
     min-height: 225px;
+=======
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 225px; 
+    width: 320px;/* Set a fixed height for the card */
+    border: 0.1px solid #fff;
+    border-radius: 1.5rem;
+>>>>>>> Stashed changes
   }
   
   .card__img {
@@ -406,8 +419,12 @@ header.remove{
     height: 100%;
     object-fit:cover;
     border-radius: 1.5rem;
+    border: 0.1px solid #fff;
   }
-  
+  #nopicmsg{
+    margin-left: 75px;
+    margin-top: 60px;
+  }
   .card__data {
     width: 88%;
     background-color: var(--container-color);

@@ -1,4 +1,6 @@
 {%load static%}
+{% load custom_filters %}
+{% load star_rating %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,30 +35,7 @@
                                 <span class="posttime">{{post.posted}}</span>
                                 </div>
                             </div>
-                            <div class="menu">...
-                                <ul class="dropdown">
-                                    <li><a href="#">
-                                        <ion-icon name="bookmark"></ion-icon>
-                                        Save this post
-                                    </a></li>
-                                    <li><a href="#">
-                                        <ion-icon name="notifications-outline"></ion-icon>
-                                        Turn on notification
-                                    </a></li>
-                                    <li><a href="#">
-                                        <ion-icon name="person-remove-outline"></ion-icon>
-                                        Unfollow user
-                                    </a></li>
-                                    <li><a href="#">
-                                        <ion-icon name="trash-bin-outline"></ion-icon>
-                                        Report Recipe
-                                    </a></li>
-                                    <li><a href="#">
-                                        <ion-icon name="restaurant-outline"></ion-icon>
-                                        Block user
-                                    </a></li>
-                                </ul>
-                            </div>
+                            
                         </div>
                         <div class="post-content">
                             <a href="{% url 'recipe_detail' post.pk %}">
@@ -69,10 +48,10 @@
                         </div>
                         <div class="post-interactions">
                             <div class="reaction">
-                                <button class="love-button" id="love-{{post.pk}}" data-postid="{{ post.pk }}">
+                                <button class="love-button" id="love-{{ post.pk }}" data-postid="{{ post.pk }}">
                                     <ion-icon class="heart-fill" name="{% if post.pk in liked_posts %}heart{% else %}heart-outline{% endif %}"></ion-icon>
                                 </button>
-                                <span class="reaction_count" id="reaction_count-{{post.pk}}">{{ post.like_count }}</span>
+                                <span class="reaction_count" id="reaction_count-{{ post.pk }}">{{ post.like_count }}</span>
                             </div>
                             <button id="comment">
                                 <img src="{% static 'img/reactions/comment.png' %}">
@@ -80,20 +59,22 @@
                             <button id="share">
                                 <img src="{% static 'img/reactions/share.png' %}" alt="">
                             </button>
+                            <div class="bookmark-icon clicked" id="bookmark-{{post.pk}}" data-postid="{{ post.pk }}">
+                                <ion-icon name="{% if post.pk in bookmarked_posts %}bookmark{% else %}bookmark-outline{% endif %}" class="filled" onclick="toggleBookmark(this)"></ion-icon>
+                            </div>
+                            
                         </div>
                         <div class="post-description">
                             <div class="aba">
                                 <h3><a href="{% url 'recipe_detail' post.pk %}">{{ post.name }}</a></h3>
                                 <div class="rating_section">
-                                    <span class="star" data-value="1" data-postid="{{ post.pk }}">★</span>
-                                    <span class="star" data-value="2" data-postid="{{ post.pk }}">★</span>
-                                    <span class="star" data-value="3" data-postid="{{ post.pk }}">★</span>
-                                    <span class="star" data-value="4" data-postid="{{ post.pk }}">★</span>
-                                    <span class="star" data-value="5" data-postid="{{ post.pk }}">★</span>
-                                </div> 
-                            </div>
+                                    {% for star in post.average_rating|times %}
+                                        <ion-icon name="star"></ion-icon>
+                                    {% endfor %}
+                                </div>
                             <div class="ratingValue" id="ratingValue-{{post.pk}}"></div>
                             <p>{{ post.description }}</p>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
@@ -127,6 +108,76 @@
             </div>
         </div>
     </div>
+    
     <script src="{% static 'js/feed.js' %}"></script>
+
+<script>
+    function toggleBookmark(icon) {
+        icon.classList.toggle('clicked');
+    }
+    
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Function to get the CSRF token from the cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        const csrftoken = getCookie('csrftoken');
+    
+        // Attach event listeners to all love buttons
+        document.querySelectorAll('.love-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.getAttribute('data-postid');
+                const heartIcon = this.querySelector('ion-icon');
+                const reactionCount = document.getElementById(`reaction_count-${postId}`);
+    
+                // Make the POST request using Fetch API
+                fetch(`/like_post/${postId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                    console.log(csrftoken+"dcwdcewcewcecedcedcede");
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.liked) {
+                        heartIcon.setAttribute('name', 'heart');
+                    } else {
+                        heartIcon.setAttribute('name', 'heart-outline');
+                    }
+                    reactionCount.textContent = data.count;
+                })
+                .catch(error => {
+                    console.error('There was an error liking/unliking the post:', error);
+                });
+            });
+        });
+    });
+    </script>
+    
 </body>
 </html>

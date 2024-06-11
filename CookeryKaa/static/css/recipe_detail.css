@@ -90,26 +90,6 @@ header.remove{
     background:transparent;
     padding: 20px;
 }
-.search-btn{
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 45px;
-    width: 45px;
-    background: transparent;
-    border: none;
-    outline: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-
-}
-.search-btn ion-icon{
-    font-size: 1.5em;
-    color: #000000;
-    transition: .2s ease;
-}
 .navbar{
     background-color: #FFE45E;
     display: flex;
@@ -314,6 +294,35 @@ header.remove{
 #close-sidebar:hover{
   font-size: 2.3em; ;
 }
+#google_translate_element {
+    display: inline-block;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 0.1px solid #9FFCFD;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+#google_translate_element .goog-te-gadget-simple {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+
+#google_translate_element .goog-te-gadget-simple .goog-te-menu-value {
+    font-size: 14px;
+    color: #333;
+}
+#google_translate_element .goog-te-gadget-icon {
+    border-radius: 50%;
+}
+#google_translate_element .goog-te-gadget-simple .goog-te-menu-value span {
+    margin-right: 5px;
+    background-color: transparent;
+}
 .information{
     margin-top: 110px;
 }
@@ -384,15 +393,14 @@ header.remove{
     width: 500px;
     height: 305.5px;
     position: relative;
-    overflow: hidden;
     background-color:transparent;
 }
 
 .foodPic img {
-
+    object-fit: cover;
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     border-radius: 20px;
 }
 
@@ -414,7 +422,6 @@ header.remove{
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     cursor: pointer;
 }
-
 
 .foodPic .icons ion-icon:hover {
     color: #C25278;
@@ -726,7 +733,10 @@ h2 {
     font-size: 16px;
     width: 100%;
 }
-
+form{
+    display: flex;
+    width: 100%;
+}
 .button {
     padding: 10px 20px;
     background-color: #FF6392;
@@ -781,7 +791,6 @@ h2 {
     font-size: 20px;
     margin-left: 10px;
 }
-
 .avatar {
     border-radius: 50%;
     width: 50px;
@@ -789,30 +798,155 @@ h2 {
     margin-right: 20px;
 }
 
+.questions-replies h2 {
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.question {
+    display: flex;
+    flex-direction:     column;
+    align-items: flex-start; /* Align items to the start of the flex container */
+    margin-bottom: 20px;
+}
+
+.question-content {
+    display: flex;
+    align-items: flex-start;
+}
+
+.question p {
+    background-color: #f9f9f9;
+    padding: 10px;
+    padding-right: 2px;
+    border-radius: 10px;
+    margin-top: 10px;
+    flex: 1; /* Allow the paragraph to grow within the flex container */
+}
+
+.actions {
+    margin-top: 10px;
+}
+
+.reply-button, .view-replies-button {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.reply-button:hover, .view-replies-button:hover {
+    text-decoration: underline;
+}
+
 .reviews {
     width: 100%;
 }
-.review-content{
+
+.review-content {
     background-color: #fff;
     border-radius: 10px;
     padding: 3px 3px;
     width: 100%;
 }
-.review-content-user{
+
+.review-content-user {
     background-color: #fff;
     border-radius: 10px;
     padding: 3px 3px;
     width: 81.93%;
 }
 
-.review-rating ion-icon {
-    color: #ffcc00;
-    margin-left: 10px;
+.review-rating-box {
+    position: relative;
+    background: transparent;
+  }
+  .review-rating-box .stars {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .stars ion-icon {
+    color: #e6e6e6;
     font-size: 20px;
-    margin-right: -6px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .stars ion-icon.active {
+    color: #ff9c1a;
+  }
+
+.review-replies {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    margin-left: 70px; /* Indent replies to align properly under questions */
 }
 
+.replies,.replyinput {
+    margin-top: 10px;
+}
+.replyinput {
+    display: none; /* Initially hide the replyinput */
+    width: 600px;
+    margin-bottom: 10px;
+}
+.reply {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    margin-left: 35px; /* Indent replies to align properly under questions */
+}
 
+.reply img,.reply-form img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.reply p {
+    background-color: #e9ecef;
+    border-radius: 5px;
+    padding: 8px;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.reply-form {
+    margin-top: 10px;
+    margin-left: 35px;
+    display: flex;
+    width: 100%;
+}
+
+.reply-input {
+    width: calc(100% - 90px);
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.post-reply {
+    background-color: #FF6392;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.post-reply:hover {
+    background-color: #C25278;
+}
 
 @media (max-width:1230px) {
     .hideOnMobile{

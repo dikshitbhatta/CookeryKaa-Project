@@ -101,7 +101,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'CookeryKaa',
         'USER': 'postgres',
-        'PASSWORD' : '5515',
+        'PASSWORD' : '$#!$#!Rpostgre',
         'HOST' : 'localhost'
     }
 }
@@ -145,7 +145,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    os.path.join(BASE_DIR,'static')
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 

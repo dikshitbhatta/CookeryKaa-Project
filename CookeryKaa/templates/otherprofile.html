@@ -21,7 +21,7 @@
             <button id="notification-btn" class="hideOnMobile"><ion-icon name="notifications"></ion-icon></button>
             <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
             <div class="profile-icon" onclick="menuToggle()" >
-              <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
+              <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture"width="50px"height="50px">
             </div>
         {% else %}
             <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
@@ -54,11 +54,17 @@
               <h2>{{ user.username }}</h2>
               <p>{{ user.profile.bio }}</p>
               <p>{{ user.email }}</p>
-          <button class="button" id="follow-btn" data-user-id="{{ user.id }}">Follow</button>
+          <button class="button" id="follow-btn" data-user-id="{{ user.id }}">
+            {% comment %} {% if already_following %}  
+              Unfollow
+            {%else%}
+              Follow
+            {%endif%} {% endcomment %}
+          </button>
 
           <ul class="about">
-            <li><span>{{followers_count}}</span> Followers</li>
-            <li><span>{{following_count}}</span> Following</li>
+            <li><span id="followers-count">{{followers_count}}</span> Followers</li>
+            <li><span id="following-count">{{following_count}}</span> Following</li>
         </ul>
         
         <div class="content">
@@ -156,14 +162,36 @@ document.getElementById('follow-btn').addEventListener('click', function() {
   .then(data => {
     if (data.status === 'followed') {
       alert('You are now following this user.');
+      document.getElementById('follow-btn').textContent = 'Unfollow';
     } else if (data.status === 'already_following') {
-      alert('You are already following this user.');
+      alert('You have unfollowed this user.');
+      document.getElementById('follow-btn').textContent = 'Follow';
     } else {
       alert('There was an error following this user.');
+      document.getElementById('follow-btn').textContent = 'Follow';
     }
   });
 });
 </script>
+
+<script>
+  function updateCounts() {
+      fetch("{% url 'get_follow_counts' %}")
+          .then(response => response.json())
+          .then(data => {
+              document.getElementById('followers-count').textContent = data.followers_count;
+              document.getElementById('following-count').textContent = data.following_count;
+          })
+          .catch(error => {
+              console.error('Error:', error);
+          });
+  }
+
+  // Call the updateCounts function initially to populate counts on page load
+  updateCounts();
+</script>
+
+
 <!-- Hidden file input element -->
 <input type="file" id="file-input" style="display: none;">
 <script src="{% static 'js/profile.js' %}"></script>

@@ -30,7 +30,7 @@
             {% endif %} 
 
 
-            <form method="POST" enctype ="multipart/form-data" class="editProfile">
+            <form method="POST" action={%url 'editprofile'%} enctype ="multipart/form-data" class="editProfile">
                 {%csrf_token%}
                 <div class="form-group flex-container img-group">
                     <div class="img__container" style="display: block;">

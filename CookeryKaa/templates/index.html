@@ -16,8 +16,12 @@
     <link rel="stylesheet" href="{%static 'css/style.css'%}"/>
     <link rel="stylesheet" href="{%static 'css/recipie.css'%}"/>
     <link rel="stylesheet" href="{%static 'css/profiledrop.css'%}"/>
+<<<<<<< Updated upstream
     <link rel="stylesheet" href="{%static 'css/feed.css'%}">
     <link rel="stylesheet" href="{%static 'css/notifications.css' %}">
+=======
+    <link rel="stylesheet" href="{% static 'css/notifications.css' %}"/>
+>>>>>>> Stashed changes
 {% comment %} 
      <iframe name="recipeFrame" id="recipeFrame" src="" frameborder="0"
         width="800px"
@@ -37,12 +41,10 @@
       </div>
         <div class="sidekoelements">
           {% if user.is_authenticated %}
-              
-              <button id="notification-btn" class="hideOnMobile" name="notifications" onclick="toggleNotifications()">
-                <ion-icon name="notifications"></ion-icon>
-                <span id="notification-badge" class="badge">{{ notification_count }}</span> 
-              </button>
-
+          <button id="notification-btn" class="hideOnMobile" onclick="toggleNotifications()">
+            <ion-icon name="notifications"></ion-icon>
+            <span id="notification-badge" class="badge">{{notification_count}}</span> 
+          </button>
               <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
 
               <div class="profile-icon" onclick="menuToggle()" >
@@ -56,7 +58,6 @@
       </div>
         
     </header>
-    
     <div id="notifications-dropdown" class="notifications-dropdown">
       <div class="notification-header">
           <h3>Notifications</h3>
@@ -66,14 +67,23 @@
           <ul>
             {% for notification in notifications %}
             <li class="notification-item">
-                <ion-icon name="{{ notification.icon }}"></ion-icon>
-                <span>{{ notification.message }}</span>
-                <small>{{ notification.time_ago }}</small>
+                {% if notification.notification_type == 1 %}
+                    <ion-icon name="heart"></ion-icon>
+                    <span>{{ notification.message}}</span>
+                {% elif notification.notification_type == 2 %}
+                    <ion-icon name="alert-circle"></ion-icon>
+                    <span>{{ notification.message}} : "{{ notification.text_preview }}"</span>
+                {% elif notification.notification_type == 3 %}
+                    <ion-icon name="person-add"></ion-icon>
+                    <span>{{ notification.sender.username }} followed you</span>
+                {% endif %}
+                <small>{{ notification.time_ago}}</small>
             </li>
-            {% endfor %}
+        {% endfor %}
           </ul>
       </div>
   </div>
+    
 
         <nav class="navbar" id="navbar">
             <div class="nav_element">
@@ -442,19 +452,24 @@
           </ul>
       </div>
   </div>
+<<<<<<< Updated upstream
 
   <div id="feed">
     {% include 'templates/feed.html' %}
   </div>
 
+=======
+  
+>>>>>>> Stashed changes
     <script>
     function menuToggle(){
         const toggleMenu = document.querySelector('.menu');
         toggleMenu.classList.toggle('active')
     }
+
   </script>
 
-    <script src="{%static 'js/notifications.js' %}"></script>
+    <script src="{% static 'js/notifications.js' %}"></script>
     <script src="{%static 'js/swiper-bundle.min.js'%}"></script>
     <script src="{%static 'js/script.js'%}"></script>
     <script src="{%static 'js/story.js'%}"></script>

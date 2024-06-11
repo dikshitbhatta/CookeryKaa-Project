@@ -119,6 +119,19 @@
                             {% endif %}
 
                             <div class="card__data">
+                                <div class="manage">
+                                    <ion-icon name="options-outline" class="delete-icon" data-recipe-id="{{ recipe.pk }}"></ion-icon>
+                                    <ul class="dropdown">
+                                        <li><button href="#" class="delete-btn" data-recipe-id="{{ recipe.pk }}">
+                                          <ion-icon name="trash"></ion-icon>
+                                            Delete this post
+                                        </button></li>
+                                        <li><button href="#">
+                                            <ion-icon name="pencil"></ion-icon>
+                                            Edit this post
+                                        </button></li>
+                                    </ul>
+                                </div>
                                 <h2 class="card__title">{{ recipe.title }}</h2>
                                 <span class="card__description">{{ recipe.description }}</span>
                                 <a href="{% url 'recipe_detail' recipe.pk %}" class="card__button">Start Cooking</a>
@@ -189,8 +202,58 @@
                 window.location.href = 'http://localhost:8000/recipe/<int:pk>/'; // Change this to the actual path of your recipe details page
             }
         }); 
-    </script>
+    </script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script>
+
+         // Function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const recipeId = this.getAttribute('data-recipe-id');
+                if (confirm('Are you sure you want to delete this recipe?')) {
+                    fetch(`/delete_recipe/${recipeId}/`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken'),
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Optionally, you can handle success here, like removing the deleted recipe from the UI
+                            console.log('Recipe deleted successfully');
+                            // Remove the deleted recipe from the UI
+                            this.closest('.card__data').remove();
+                        } else {
+                            console.error('Failed to delete recipe');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting recipe:', error);
+                    });
+                }
+            });
+        });
+
+
+        
+    </script>
 </body>
 </html>

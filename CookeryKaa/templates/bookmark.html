@@ -49,89 +49,55 @@
     </div>
     <span class="msg">Here are all of your favourite dishes.</span>
     <div class="container">
-        <div class="card__container">
-           <article class="card__article">
-              <img src="{%static 'img/assests/1.jpg'%}" alt="image" class="card__img">
-
-              <div class="card__data">
-                 <h2 class="card__title">Pancake</h2>
-                 <a href="#" class="card__button">Read More</a>
-              </div>
-              <div class="bookmark-icon" onclick="toggleBookmark(this)">
-                <ion-icon name="bookmark" class="filled"></ion-icon>
-                <ion-icon name="bookmark-outline" class="outline"></ion-icon>
-              </div>
-          </article>
-
-           <article class="card__article">
-              <img src="{%static 'img/assests/8.jpg'%}" alt="image" class="card__img">
-
-              <div class="card__data">
-                 <h2 class="card__title">Appetizer</h2>
-                 <a href="#" class="card__button">Read More</a>
-              </div>
-              <div class="bookmark-icon" onclick="toggleBookmark(this)">
-                <ion-icon name="bookmark" class="filled"></ion-icon>
-                <ion-icon name="bookmark-outline" class="outline"></ion-icon>
-              </div>
-           </article>
-
-           <article class="card__article">
-              <img src="{%static 'img/assests/9.jpg'%}"  alt="image" class="card__img">
-
-              <div class="card__data">
-                 <h2 class="card__title">Tuna Fish</h2>
-                 <a href="#" class="card__button">Read More</a>
-              </div>
-              <div class="bookmark-icon" onclick="toggleBookmark(this)">
-                <ion-icon name="bookmark" class="filled"></ion-icon>
-                <ion-icon name="bookmark-outline" class="outline"></ion-icon>
-              </div>
-           </article>
-           <article class="card__article">
-            <img src="{%static 'img/assests/10.jpg'%}"  alt="image" class="card__img">
-
-            <div class="card__data">
-               <h2 class="card__title">Sliced Tomato With Veggies</h2>
-               <a href="#" class="card__button">Read More</a>
-            </div>
-            <div class="bookmark-icon" onclick="toggleBookmark(this)">
-              <ion-icon name="bookmark" class="filled"></ion-icon>
-              <ion-icon name="bookmark-outline" class="outline"></ion-icon>
-            </div>
-         </article>
-         <article class="card__article">
-            <img src="{%static 'img/assests/11.jpg'%}"  alt="image" class="card__img">
-
-            <div class="card__data">
-               <h2 class="card__title">Chocolate Cake</h2>
-               <a href="#" class="card__button">Read More</a>
-            </div>
-            <div class="bookmark-icon" onclick="toggleBookmark(this)">
-              <ion-icon name="bookmark" class="filled"></ion-icon>
-              <ion-icon name="bookmark-outline" class="outline"></ion-icon>
-            </div>
-         </article>
-         <article class="card__article">
-            <img src="{%static 'img/assests/5.jpg'%}"  alt="image" class="card__img">
-
-            <div class="card__data">
-               <h2 class="card__title">Ham Burger</h2>
-               <a href="#" class="card__button">Read More</a>
-            </div>
-            <div class="bookmark-icon" onclick="toggleBookmark(this)">
-              <ion-icon name="bookmark" class="filled"></ion-icon>
-              <ion-icon name="bookmark-outline" class="outline"></ion-icon>
-            </div>
-         </article>
-        </div>
+      <div class="card__container" id="card-container">
+        {% for recipe in bookmarked_recipes %}
+        <article class="card__article" data-id="{{ recipe.id }}">
+           <img src="{%if recipe.photo %}{{ recipe.photo.url }}{%else%}{%static 'img/assests/default_photo.png'%}{%endif%}" alt="{{ recipe.title }}" class="card__img">
+           <div class="card__data">
+              <h2 class="card__title">{{ recipe.title }}</h2>
+              <a href="{% url 'recipe_detail' recipe.id %}" class="card__button">Read More</a>
+           </div>
+           <div class="bookmark-icon clicked" onclick="toggleBookmark(this)">
+             <ion-icon name="bookmark" class="filled"></ion-icon>
+             <ion-icon name="bookmark-outline" class="outline"></ion-icon>
+           </div>
+        </article>
+        {% endfor %}
      </div>
+  </div>
     <!-- Hidden file input element -->
     <input type="file" id="file-input" style="display: none;">
     <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+        const bookmarkIcons = document.querySelectorAll('.bookmark-icon');
+
+        bookmarkIcons.forEach(icon => {
+            const card = icon.closest('.card__article');
+            const cardId = card.getAttribute('data-id');
+            if (bookmarks.includes(cardId)) {
+                icon.classList.add('clicked');
+            }
+        });
+    });
+
     function toggleBookmark(icon) {
-        icon.classList.toggle('clicked');
+        const card = icon.closest('.card__article');
+        const cardId = card.getAttribute('data-id');
+        let bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+
+        if (icon.classList.contains('clicked')) {
+            icon.classList.remove('clicked');
+            bookmarks = bookmarks.filter(id => id !== cardId);
+        } else {
+            icon.classList.add('clicked');
+            bookmarks.push(cardId);
+        }
+
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
     }
+    </script>
+
     </script>
     <script src ="js/profile.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
