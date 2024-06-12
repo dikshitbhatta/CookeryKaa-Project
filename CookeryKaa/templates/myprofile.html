@@ -1,15 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
+
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Responsive Profile Page</title>
-
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/profiledrop.css' %}" />
-    <style>
+    <link rel="stylesheet" href="{%static 'css/profile.css' %}" /> 
+    
+     <style>
         iframe {
             aspect-ratio: 16/9;
             width: 70%;
@@ -26,31 +26,15 @@
         iframe.active {
             transform: scale(1);
         }
-        #pppp {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-        }
-        .header__wrapper .cols__container .left__col .img__container {
-            position: absolute;
-            width: 130px;
-            height: 130px;
-            top: -60px;
-            left: 50%;
-            cursor: pointer;
-            transform: translateX(-50%);
-        }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <iframe id="recipeIframe" src="http://localhost:8000/addrecipe/" frameborder="0"></iframe>    
     <header id="header">
         <a href="{% url 'index' %}"><img class="logo" src="{% static 'img/assests/flogo.png' %}" alt="Logo"></a>
         <div class="search_box">
             <input type="text" placeholder="I am craving....">
-            <button class="search-btn"><ion-icon name="search"></ion-icon></button>
+            <button class = "search-btn"><ion-icon name="search"></ion-icon></button>
             <a href="#"></a>
         </div>
         <div class="sidekoelements">
@@ -58,136 +42,136 @@
                 <button id="notification-btn" class="hideOnMobile"><ion-icon name="notifications"></ion-icon></button>
                 <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
                 <div class="profile-icon" onclick="toggleMenu()">
-                    <img class="img__container" id="pppp" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
+                    <img class="img__container" id="pppp" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture" width="50px" height="50px" style="border-radius: 50%; cursor: pointer; border: 2px solid #FF6392;">
                 </div>
             {% else %}
                 <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
             {% endif %}
             <button id="menu"><ion-icon name="menu-outline"></ion-icon></button>
         </div>
+        
     </header>
     <nav class="sidebar" id="sidebar">
-        <button id="close-sidebar"><ion-icon name="close"></ion-icon></button>
-        <a href="#">Popular</a>
-        <a href="#">Meals</a>
-        <a href="#">Occasions</a>
-        <a href="#">Cuisines</a>
-        <a href="#">Seasonal</a>
-        <a href="#">Kitchen Wares</a>
-        <a href="#">Contact Us</a>
-        <button id="notification-btn-sb"><ion-icon name="notifications"></ion-icon></button>
-        <a href="{% url 'bookmark' %}"><button id="bookmark-btn"><ion-icon name="bookmark"></ion-icon></button></a>
-        <button id="login-btn-popup-sb"><ion-icon name="person"></ion-icon></button>
+      <button id="close-sidebar"><ion-icon name="close"></ion-icon></button>
+      <a href="#">Popular</a>
+      <a href="#">Meals</a>
+      <a href="#">Occasions</a>
+      <a href="#">Cuisines</a>
+      <a href="#">Seasonal</a>
+      <a href="#">Kitchen Wares</a>
+      <a href="#">Contact Us</a>
+      <button id="notification-btn-sb"><ion-icon name="notifications"></ion-icon></button>
+      <a href="{% url 'bookmark' %}"><button id="bookmark-btn"><ion-icon name="bookmark"></ion-icon></button></a>
+      <button id="login-btn-popup-sb"><ion-icon name="person"></ion-icon></button>
     </nav>
 
     <div class="header__wrapper">
-        <div class="cols__container">
-            <div class="left__col">
-                <div class="img__container">
-                    <img src="{{ user.profile.picture.url }}" alt="{{ user.username }}"/>
-                </div>
-                <h2>{{ user.username }}</h2>
-                <p>{{ user.profile.bio }}</p>
-                <p>{{ user.email }}</p>
+      <div class="cols__container">
+        <div class="left__col">
+          <div class="img__container">
+            <img src="{{ user.profile.picture.url }}" alt="{{ user.username }}"/>
+          </div>
+          <h2>{{ user.username }}</h2>
+          <p>{{ user.profile.bio }}</p>
+          <p>{{ user.email }}</p>
 
-                <ul class="about">
-                    <li><span>{{followers_count}}</span> Followers</li>
-                    <li><span>{{following_count}}</span> Following</li>
-                </ul>
+          <ul class="about">
+            <li><span>{{followers_count}}</span> Followers</li>
+            <li><span>{{following_count}}</span> Following</li>
+          </ul>
 
-                <div class="content">
-                    <p>{{ user.profile.about }}</p>
-                    <ul>
-                        <ion-icon name="logo-twitter"></ion-icon>
-                        <ion-icon name="logo-facebook"></ion-icon>
-                    </ul>
-                </div>
+          <div class="content">
+            <p>
+                {{ user.profile.about }}
+            </p>
+
+            <ul>
+              <ion-icon name="logo-twitter"></ion-icon>
+              <ion-icon name="logo-facebook"></ion-icon>
+            </ul>
+          </div>
+        </div>
+        <div class="right__col">
+          <nav>
+            <a href="{% url 'editprofile' %}"><button class="button">Edit Profile</button></a>
+          </nav>
+          <div class="post">
+            {% for recipe in recipes %}
+            <article class="card__article">
+                {% if recipe.photo %}
+                <img src="{{ recipe.photo.url }}" alt="{{ recipe.title }}" class="card__img">
+            {% else %}
+            <img src="{% static 'img/assests/default_photo.png' %}" alt="{{ recipe.title }}" class="card__img">
+            {% endif %}
+              <div class="card__data">
+                <div class="manage">
+                  <ion-icon name="options-outline" class="delete-icon" data-recipe-id="{{ recipe.pk }}"></ion-icon>
+                  <ul class="dropdown">
+                      <li><button href="#" class="delete-btn" data-recipe-id="{{ recipe.pk }}">
+                        <ion-icon name="trash"></ion-icon>
+                          Delete this post
+                      </button></li>
+                      <li><button href="#">
+                          <ion-icon name="pencil"></ion-icon>
+                          Edit this post
+                      </button></li>
+                  </ul>
+              </div>
+                <h2 class="card__title">{{ recipe.title }}</h2>
+                <span class="card__description">{{ recipe.description }}</span>
+                <a href="{% url 'recipe_detail' recipe.pk %}" class="card__button">Start Cooking</a>
+              </div>
+            </article>
+            {% endfor %}
+            <div class="uploadcontent">
+              <img id ="RecipieLogo"src="{% static 'img/assests/icons8-recipe-50.png'%}" alt="Photo" />
+              <button id="uploadRecipe">Add Recipe</button>
             </div>
-            <div class="right__col">
-                <nav>
-                    <button onclick="location.href='{% url 'editprofile' %}'">Edit Profile</button>
-                    <button>Manage Contents</button>
-                </nav>
+          </div>
+        </div>
 
-                <div class="post">
-                    {% for recipe in recipes %}
-                        <article class="card__article">
-                            {% if recipe.photo %}
-                                <img src="{{ recipe.photo.url }}" alt="{{ recipe.title }}" class="card__img">
-                            {% else %}
-                            <img src="{% static 'img/assests/default_photo.png' %}" alt="{{ recipe.title }}" class="card__img">
-                            {% endif %}
-
-                            <div class="card__data">
-                                <div class="manage">
-                                    <ion-icon name="options-outline" class="delete-icon" data-recipe-id="{{ recipe.pk }}"></ion-icon>
-                                    <ul class="dropdown">
-                                        <li><button href="#" class="delete-btn" data-recipe-id="{{ recipe.pk }}">
-                                          <ion-icon name="trash"></ion-icon>
-                                            Delete this post
-                                        </button></li>
-                                        <li><button href="#">
-                                            <ion-icon name="pencil"></ion-icon>
-                                            Edit this post
-                                        </button></li>
-                                    </ul>
-                                </div>
-                                <h2 class="card__title">{{ recipe.title }}</h2>
-                                <span class="card__description">{{ recipe.description }}</span>
-                                <a href="{% url 'recipe_detail' recipe.pk %}" class="card__button">Start Cooking</a>
-                            </div>
-                        </article>
-                    {% empty %}
-                        <p>You have not posted any recipes yet.</p>
-                    {% endfor %}
-                    <div class="uploadcontent">
-                        <img id="RecipeLogo" src="{% static 'img/assests/icons8-recipe-50.png' %}" alt="Photo" />
-                        <button id="uploadRecipe" type="button">Add Recipe</button>
-                    </div>
+        <div class="sub-menu-wrap" id="subMenu">
+            <div class="sub-menu">
+                <div class="user-info">
+                    <h2>{{user.username}}</h2>
                 </div>
+                <hr>
+                <a href="{% url 'myprofile' %}" class="sub-menu-link">
+                    <ion-icon name="person"></ion-icon>
+                    <p>My Profile</p>
+                    <span>></span>
+                </a>
+                <a href="{% url 'editprofile' %}" class="sub-menu-link">
+                    <ion-icon name="pencil"></ion-icon>
+                    <p>Edit Profile</p>
+                    <span>></span>
+                </a>
+                <a href="" class="sub-menu-link">
+                    <ion-icon name="cog"></ion-icon>
+                    <p>Settings</p>
+                    <span>></span>
+                </a>
+                <a href="{% url 'logout' %}" class="sub-menu-link">
+                    <ion-icon name="log-out"></ion-icon>
+                    <p>Logout</p>
+                    <span>></span>
+                </a>
             </div>
         </div>
-    </div>
-
-    <div class="sub-menu-wrap" id="subMenu">
-        <div class="sub-menu">
-            <div class="user-info">
-                <h2>{{user.username}}</h2>
-            </div>
-            <hr>
-            <a href="{% url 'myprofile' %}" class="sub-menu-link">
-                <ion-icon name="person"></ion-icon>
-                <p>My Profile</p>
-                <span>></span>
-            </a>
-            <a href="{% url 'editprofile' %}" class="sub-menu-link">
-                <ion-icon name="pencil"></ion-icon>
-                <p>Edit Profile</p>
-                <span>></span>
-            </a>
-            <a href="" class="sub-menu-link">
-                <ion-icon name="cog"></ion-icon>
-                <p>Settings</p>
-                <span>></span>
-            </a>
-            <a href="{% url 'logout' %}" class="sub-menu-link">
-                <ion-icon name="log-out"></ion-icon>
-                <p>Logout</p>
-                <span>></span>
-            </a>
-        </div>
-    </div>
-    <script>
-        // Function to toggle the menu visibility
-        function toggleMenu() {
-            console.log('Profile icon clicked'); // Debugging log
-            let subMenu = document.getElementById('subMenu');
-            subMenu.classList.toggle('open-menu');
-        }
-    </script>
+        <script>
+            // Function to toggle the menu visibility
+            function toggleMenu() {
+                console.log('Profile icon clicked'); // Debugging log
+                let subMenu = document.getElementById('subMenu');
+                subMenu.classList.toggle('open-menu');
+            }
+        </script>
+        
     <!-- Hidden file input element -->
     <input type="file" id="file-input" style="display: none;">
     <script src="{% static 'js/profile.js' %}"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script>
         window.addEventListener('message', function(event) {
             if (event.data === 'closeAndRedirect') {
@@ -197,57 +181,54 @@
             }
         }); 
     </script>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
     <script>
 
-         // Function to get CSRF token from cookies
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
+        // Function to get CSRF token from cookies
+       function getCookie(name) {
+           let cookieValue = null;
+           if (document.cookie && document.cookie !== '') {
+               const cookies = document.cookie.split(';');
+               for (let i = 0; i < cookies.length; i++) {
+                   const cookie = cookies[i].trim();
+                   if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                       cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                       break;
+                   }
+               }
+           }
+           return cookieValue;
+       }
 
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const recipeId = this.getAttribute('data-recipe-id');
-                if (confirm('Are you sure you want to delete this recipe?')) {
-                    fetch(`/delete_recipe/${recipeId}/`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRFToken': getCookie('csrftoken'),
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            // Optionally, you can handle success here, like removing the deleted recipe from the UI
-                            console.log('Recipe deleted successfully');
-                            // Remove the deleted recipe from the UI
-                            this.closest('.card__data').remove();
-                        } else {
-                            console.error('Failed to delete recipe');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error deleting recipe:', error);
-                    });
-                }
-            });
-        });
+       document.querySelectorAll('.delete-btn').forEach(button => {
+           button.addEventListener('click', function() {
+               const recipeId = this.getAttribute('data-recipe-id');
+               if (confirm('Are you sure you want to delete this recipe?')) {
+                   fetch(`/delete_recipe/${recipeId}/`, {
+                       method: 'DELETE',
+                       headers: {
+                           'X-CSRFToken': getCookie('csrftoken'),
+                           'Content-Type': 'application/json'
+                       }
+                   })
+                   .then(response => {
+                       if (response.ok) {
+                           // Optionally, you can handle success here, like removing the deleted recipe from the UI
+                           console.log('Recipe deleted successfully');
+                           // Remove the deleted recipe from the UI
+                           this.closest('.card__data').remove();
+                       } else {
+                           console.error('Failed to delete recipe');
+                       }
+                   })
+                   .catch(error => {
+                       console.error('Error deleting recipe:', error);
+                   });
+               }
+           });
+       });
 
 
-        
-    </script>
-</body>
+       
+   </script>
+  </body>
 </html>
