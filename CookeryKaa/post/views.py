@@ -190,6 +190,12 @@ def bookmark(request):
 
     return render(request, 'bookmark.html', {'bookmarked_recipes': bookmarked_recipes})
 
+def contactus(request):
+    return render(request,'contactus.html')
+
+def kitchenware(request):
+    return render (request,'kitchenware.html')
+
 
 def myprofile(request):
     user = request.user

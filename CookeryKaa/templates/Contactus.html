@@ -1,115 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Responsive Profile Page</title>
-    <link rel="stylesheet" href="contact.css" />
-  </head>
-  <body>
-    <header id="header">
-      <a href="index.html"><img class="logo" src="images/assests/flogo.png" alt="Logo"></a>
-      <div class="search_box">
-        <input type="text" placeholder="I am craving...." />
+    <title>Contactus</title>
+    {% load static %}
+    <link rel="stylesheet" href="{%static 'css/style.css'%}"/>
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}" />
+</head>
+<body>
+  <header id="header">
+    <a href="{% url 'index' %}"><img class="logo" src="{%static 'img/assests/flogo.png'%}"></a>
+    <div class="search_box">
+        <input type="text" placeholder="I am craving....">
         <a href="#"></a>
-      </div>
-      <div class="sidekoelements">
-        <button id="notification-btn" class="hideOnMobile">
-          <ion-icon name="notifications"></ion-icon>
-        </button>
-        <button id="bookmark-btn" class="hideOnMobile">
-          <ion-icon name="bookmark"></ion-icon>
-        </button>
-        <button id="login-btn-popup" class="hideOnMobile">
-          <ion-icon name="person"></ion-icon>
-        </button>
-        <button id="menu">
-          <ion-icon name="menu-outline"></ion-icon>
-        </button>
-      </div>
-    </header>
+    </div>
+    <div class="sidekoelements">
+      {% if user.is_authenticated %}
+          <button id="notification-btn" class="hideOnMobile"><ion-icon name="notifications"></ion-icon></button>
+          <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
+          <div class="profile-icon" onclick="menuToggle()" >
+            <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
+          </div>
+      {% else %}
+          <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
+      {% endif %}
+      <button id="menu"><ion-icon name="menu-outline"></ion-icon></button>
+  </div>        
+</header>
     <nav class="sidebar" id="sidebar">
-      <button id="close-sidebar"><ion-icon name="close"></ion-icon></button>
-      <a href="#">Popular</a>
-      <a href="#">Meals</a>
-      <a href="#">Occasions</a>
-      <a href="#">Cuisines</a>
-      <a href="#">Seasonal</a>
-      <a href="#">Kitchen Wares</a>
-      <a href="#">Contact Us</a>
-      <button id="notification-btn-sb"><ion-icon name="notifications"></ion-icon></button>
-      <button id="bookmark-btn-sb"><ion-icon name="bookmark"></ion-icon></button>
-      <button id="login-btn-popup-sb"><ion-icon name="person"></ion-icon></button>
+        <button id="close-sidebar"><ion-icon name="close"></ion-icon></button>
+        <a href="#">Popular</a>
+        <a href="#">Meals</a>
+        <a href="#">Occasions</a>
+        <a href="#">Cuisines</a>
+        <a href="#">Seasonal</a>
+        <a href="#">Kitchen Wares</a>
+        <a href="#">Contact Us</a>
+        <button id="notification-btn-sb"><ion-icon name="notifications"></ion-icon></button>
+        <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
+        <button id="login-btn-popup-sb"><ion-icon name="person"></ion-icon></button>
     </nav>
     <div class="container">
-    <div class="main-content">
-      <section id="contact">
-          <h2>Contact Us</h2>
-          <p><strong>For Assistance With CookeryKaa.com:</strong></p>
-          <ul>
-              <li>Contact our Support Team: <a href="#">Submit a Help Request</a></li>
-              <li>View our Help Topics: <a href="#">Help Center</a></li>
-              <li>Online: <a href="#">Subscription Account Portal</a></li>
-              <li>Email: <a href="mailto:support@example.com">support@example.com</a></li>
-              <li>Call: (+977) 9744257124</li>
-          </ul>
-      </section>
-      <section id="work">
-         <h2>Work With Us</h2>
-         <div class="work_us">
-            <p>Join our team of enthusiastic editors, designers, programmers, and more. View job openings <a href="#" id="job-openings-link">here</a>.</p>
-            <div class="image-container">
-                <div class="image-item">
-                    <img id="Image1" src="Contactus/img1.jpg" alt="Developer 1 Image" class="visible">
-                    <div class="info-container" id="Info1">
-                        <h3>Developer 1</h3>
-                        <p>Frontend Developer</p>
+        <div class="main-content">
+            <section id="contact">
+                <h2>Contact Us</h2>
+                <p><strong>For Assistance With CookeryKaa.com:</strong></p>
+                <ul>
+                    <li>Contact our Support Team: <a href="#">Submit a Help Request</a></li>
+                    <li>View our Help Topics: <a href="#">Help Center</a></li>
+                    <li>Online: <a href="#">Subscription Account Portal</a></li>
+                    <li>Email: <a href="mailto:support@example.com">support@example.com</a></li>
+                    <li>Call: (+977) 9744257124</li>
+                </ul>
+            </section>
+            <section id="work">
+                <h2>Work With Us</h2>
+                <div class="work_us">
+                    <p>Join our team of enthusiastic editors, designers, programmers, and more. View job openings <a href="#" id="job-openings-link">here</a>.</p>
+                    <div class="image-container">
+                        <div class="image-item">
+                            <img id="Image1" src="{% static 'img/contactus/img1.jpg' %}" alt="Work With Us Image 1">
+                        </div>
+                        <div class="info-container" id="Info1">
+                          <h3>Developer 1</h3>
+                          <p>Frontend Developer</p>
+                      </div>
+                        <div class="image-item">
+                            <img id="Image2" src="{% static 'img/contactus/img2.jpg' %}" alt="Work With Us Image 2">
+
+                        </div>
+                        <div class="info-container" id="Info2">
+                          <h3>Developer 2</h3>
+                          <p>Backend Developer</p>
+                      </div>
+                        <div class="image-item">
+                            <img id="Image3" src="{% static 'img/contactus/img3.jpg' %}" alt="Work With Us Image 3">
+
+                        </div>
+                        <div class="info-container" id="Info3">
+                          <h3>Developer 3</h3>
+                          <p>UI/UX Designer</p>
+                      </div>
                     </div>
                 </div>
-                <div class="image-item">
-                    <img id="Image2" src="Contactus/img2.jpg" alt="Developer 2 Image" class="hidden">
-                    <div class="info-container" id="Info2">
-                        <h3>Developer 2</h3>
-                        <p>Backend Developer</p>
-                    </div>
-                </div>
-                <div class="image-item">
-                    <img id="Image3" src="Contactus/img3.jpg" alt="Developer 3 Image" class="hidden">
-                    <div class="info-container" id="Info3">
-                        <h3>Developer 3</h3>
-                        <p>UI/UX Designer</p>
-                    </div>
-                </div>
-                <div class="image-item">
-                    <img id="Image4" src="Contactus/img4.jpg" alt="Developer 4 Image" class="hidden">
-                    <div class="info-container" id="Info4">
-                        <h3>Developer 4</h3>
-                        <p>Full Stack Developer</p>
-                    </div>
-                </div>
-            </div>
+            </section>
+            <div id="jobModal" class="modal">
+              <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>No job currently</p>
+              </div>
+              </div>
+            <section id="press">
+                <h2>Press</h2>
+                <p>For media inquiries, please contact our press team at <a href="mailto:press@example.com">press@example.com</a>.</p>
+            </section>
         </div>
-     </section>
-     <div id="jobModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <p>No job currently</p>
-      </div>
     </div>
-  </div>
-</div>
-
-
     <script>
       function toggleBookmark(icon) {
           icon.classList.toggle('clicked');
       }
       </script>
-      <script src ="contact.js"></script>
-      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      
-    </body>
-  </html>
+    <script src="{% static 'js/contact.js' %}"></script>
+    <script src="{%static 'js/script.js'%}"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
