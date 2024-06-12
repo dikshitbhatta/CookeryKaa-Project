@@ -34,14 +34,15 @@ h1 {
 }
 
 .sidebar_right {
-   position: absolute;
-   right: -335px;
-   margin-top: -780px;
+   position: fixed;
+   right: 10px;
+   margin-top: -870px;
    background-color: #7fc8f8;
    padding: 10px;
    border-radius: 10px;
    border: 2px solid black;
-   width: 35%;
+   width: 25%;
+   height: 75%;
    
    box-sizing: border-box;
    
@@ -264,39 +265,6 @@ h1 {
    height: 40px;
    object-fit: fill;
 }
-<<<<<<< HEAD
-
-.bookmark-icon ion-icon {
-   cursor: pointer;
-   color: black;
-   font-size: 40px;
-}
-
-/* Target ion-icon with .filled class inside .bookmark-icon */
-.bookmark-icon ion-icon.filled {
-    
-   color: #FF6392 !important; /* Change icon color to contrast with background */
-   border-radius: 50%; /* Apply border radius to create a circular shape */
-   padding: 5px; /* Add padding to increase the clickable area */
-}
-
-
-
-=======
-.bookmark-icon{
-   position: relative;
-   top: 10%;
-   right: 10px;
-   border: none;
-   outline: none;
-}
-.bookmark-icon ion-icon{
-   top: 10%;
-   right: 10px;
-   color: #FF6392;
-   font-size: 1.9em;
-}
->>>>>>> 8b70674b253afe064dcfb004d28e754c5c85bf5d
 .post-description {
    padding: 10px 0;
 }

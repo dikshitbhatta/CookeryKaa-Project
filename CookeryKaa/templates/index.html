@@ -43,7 +43,7 @@
           </button>
               <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
 
-              <div class="profile-icon" onclick="menuToggle()">
+              <div class="profile-icon" onclick="toggleMenu()">
                 <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
             </div>
 
@@ -509,13 +509,14 @@
   </div>
 
 
-<script>
-    function menuToggle(){
-        const toggleMenu = document.querySelector('.menu');
-        toggleMenu.classList.toggle('active')
+  <script>
+    // Function to toggle the menu visibility
+    function toggleMenu() {
+        console.log('Profile icon clicked'); // Debugging log
+        let subMenu = document.getElementById('subMenu');
+        subMenu.classList.toggle('open-menu');
     }
-
-  </script>
+</script>
 
     <script src="{% static 'js/notifications.js' %}"></script>
     <script src="{%static 'js/swiper-bundle.min.js'%}"></script>

@@ -17,7 +17,7 @@ body {
 
 .sub-menu-wrap {
     scroll-behavior: sticky;
-    position: absolute;
+    position: fixed;
     top: 12%;
     right: 10px;
     width: 220px;

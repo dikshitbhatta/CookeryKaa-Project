@@ -1,7 +1,7 @@
 
 .notifications-dropdown {
    display: none;
-   position: absolute;
+   position: fixed;
    top: 100px; 
    right: 20px;
    width: 300px;
