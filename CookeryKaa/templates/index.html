@@ -15,10 +15,9 @@
     <link rel="stylesheet" href="{%static 'css/swiper-bundle.min.css'%}" />
     <link rel="stylesheet" href="{%static 'css/style.css'%}"/>
     <link rel="stylesheet" href="{%static 'css/recipie.css'%}"/>
-    <link rel="stylesheet" href="{%static 'css/profiledrop.css'%}"/>
-    <link rel="stylesheet" href="{%static 'css/feed.css'%}">
-    <link rel="stylesheet" href="{%static 'css/notifications.css' %}">
     <link rel="stylesheet" href="{% static 'css/notifications.css' %}"/>
+    <link rel="stylesheet" href="{%static 'css/feed.css'%}"/>
+    <link rel="stylesheet" href="{%static 'css/profiledrop.css'%}"/>
 {% comment %} 
      <iframe name="recipeFrame" id="recipeFrame" src="" frameborder="0"
         width="800px"
@@ -44,9 +43,9 @@
           </button>
               <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
 
-              <div class="profile-icon" onclick="menuToggle()" >
+              <div class="profile-icon" onclick="toggleMenu()">
                 <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
-              </div>
+            </div>
 
           {% else %}
               <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
@@ -279,6 +278,10 @@
                       <input type="file" id="story-upload" accept="image/*" style="display: none;">
                   </div>
               </div>
+              <div class="story">
+                    <img src="{%static 'img/assests/6.jpg'%}" alt="">
+                    <div class="author">Author</div>
+              </div>
           </div>
           <div class="next-btn active"><ion-icon name="chevron-forward-outline" class="prev-next-btn"></ion-icon></div>
       </div>
@@ -297,48 +300,7 @@
       </div>
     </div>
 
-  <!-- Embed static paths in a script -->
-  <script type="application/json" id="all-stories-data">
-      [
-          {
-              "id": 0,
-              "author": "Siddhanta Adhikari",
-              "imageURL": "{% static 'img/assests/1.jpg' %}"
-          },
-          {
-              "id": 1,
-              "author": "Shishir Adhikari",
-              "imageURL": "{% static 'img/assests/2.jpg' %}"
-          },
-          {
-              "id": 2,
-              "author": "Prashesh Adhikari",
-              "imageURL": "{% static 'img/assests/3.jpg' %}"
-          },
-          {
-              "id": 3,
-              "author": "Dikshit Bhatta",
-              "imageURL": "{% static 'img/assests/4.jpg' %}"
-          },
-          {
-              "id": 4,
-              "author": "Kasmik Regmi",
-              "imageURL": "{% static 'img/assests/5.jpg' %}"
-          },
-          {
-              "id": 5,
-              "author": "Pratik Pokhrel",
-              "imageURL": "{% static 'img/assests/6.jpg' %}"
-          },
-          {
-              "id": 6,
-              "author": "Bikesh Khatri",
-              "imageURL": "{% static 'img/assests/7.jpg' %}"
-          }
-      ]
-  </script>
-
-    <div class="container swiper">
+     <div class="container swiper">
       <div class="slide-container">
         <span class="Recipe_day">Recipes of the day</span>
         <div class="card-wrapper swiper-wrapper">
@@ -409,47 +371,42 @@
       <div class="swiper-pagination"></div>
     </div>
 
-  <div class="action">
-      <div id ="profiledropdown" class="menu">
-          <h3>
-              {{user.username}} 
-          </h3>
-          <ul>
-              <li>
-                  <ion-icon name="person"></ion-icon>
-                  <a href="{% url 'myprofile' %}">My Profile</a>
-
-              </li>
-              <li>
-                  <ion-icon name="pencil"></ion-icon>
-                  <a href="{% url 'editprofile' %}">Edit Profile</a>
-                  <span>></span>
-              </li>
-              <li>
-                  <ion-icon name="person-add"></ion-icon>
-                  <a href="#">Add Account</a>
-                  <span>></span>
-              </li>
-              <li>
-                  <ion-icon name="people"></ion-icon>
-                  <a href="#">Switch Accounts</a>
-                  <span>></span>
-              </li>
-              <li>
-                  <ion-icon name="cog"></ion-icon>
-                  <a href="#">Settings</a>
-                  <span>></span>
-                  
-              </li>
-              <li>
-                  <ion-icon name="log-out"></ion-icon>
-                  <a href="{% url 'logout' %}">Logout</a>
-                  <span>></span>
-              </li>
-          </ul>
-      </div>
-  </div>
-
+    <div class="sub-menu-wrap" id="subMenu">
+        <div class="sub-menu">
+            <div class="user-info">
+                <h2>{{user.username}}</h2>
+            </div>
+            <hr>
+            <a href="{% url 'myprofile' %}" class="sub-menu-link">
+                <ion-icon name="person"></ion-icon>
+                <p>My Profile</p>
+                <span>></span>
+            </a>
+            <a href="{% url 'editprofile' %}" class="sub-menu-link">
+                <ion-icon name="pencil"></ion-icon>
+                <p>Edit Profile</p>
+                <span>></span>
+            </a>
+            <a href="" class="sub-menu-link">
+                <ion-icon name="cog"></ion-icon>
+                <p>Settings</p>
+                <span>></span>
+            </a>
+            <a href="{% url 'logout' %}" class="sub-menu-link">
+                <ion-icon name="log-out"></ion-icon>
+                <p>Logout</p>
+                <span>></span>
+            </a>
+        </div>
+    </div>
+    <script>
+        // Function to toggle the menu visibility
+        function toggleMenu() {
+            console.log('Profile icon clicked'); // Debugging log
+            let subMenu = document.getElementById('subMenu');
+            subMenu.classList.toggle('open-menu');
+        }
+    </script>
   <div id="feed">
     <div class="container">
       <h1>NEWS FEED</h1>
@@ -502,16 +459,18 @@
                           
                       </div>
                       <div class="post-description">
-                          <div class="aba">
-                              <h3><a href="{% url 'recipe_detail' post.pk %}">{{ post.name }}</a></h3>
-                              <div class="rating_section">
-                                  {% for star in post.average_rating|times %}
-                                      <ion-icon name="star"></ion-icon>
-                                  {% endfor %}
-                              </div>
-                          <div class="ratingValue" id="ratingValue-{{post.pk}}"></div>
-                          <p>{{ post.description }}</p>
-                          </div>
+                        <div class="aba">
+                            <div class="recipeinfo">
+                                <span><a href="{% url 'recipe_detail' post.pk %}">{{ post.name }}</a></span>
+                                <p>{{ post.description }}</p>
+                            </div>
+                            <div class="rating_section">
+                                {% for star in post.average_rating|times %}
+                                    <ion-icon name="star"></ion-icon>
+                                {% endfor %}
+                            </div>
+                            <div class="ratingValue" id="ratingValue-{{post.pk}}"></div>
+                        </div>
                       </div>
                   </div>
               {% endfor %}
@@ -547,20 +506,13 @@
   </div>
   </div>
 
-  
-    <script>
-    function menuToggle(){
-        const toggleMenu = document.querySelector('.menu');
-        toggleMenu.classList.toggle('active')
-    }
-
-  </script>
-
+      
     <script src="{% static 'js/notifications.js' %}"></script>
     <script src="{%static 'js/swiper-bundle.min.js'%}"></script>
     <script src="{%static 'js/script.js'%}"></script>
     <script src="{%static 'js/story.js'%}"></script>
     <script src="{% static 'js/feed.js' %}"></script>
+    <script src="{% static 'js/like.js' %}"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 

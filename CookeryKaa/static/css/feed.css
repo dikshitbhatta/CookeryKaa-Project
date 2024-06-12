@@ -48,7 +48,7 @@ h1 {
 }
 
 .post {
-   background-color: #D9D9D9;
+   background-color: #f0f0f0;
    border-radius: 10px;
    box-shadow: 0 0 10px rgba(0,0,0,0.1);
    margin-top: 20px;
@@ -68,32 +68,54 @@ h1 {
 
 .photo img {
    width: 100%;
-   max-width: 80px;
+   max-width: 90px;
    height: 80px;
-   border-radius: 100%;
-   margin-right: 10px;
-   object-fit: fill;
-   border: 2px solid #a43ab2;
+   object-fit: cover;
+  border: 3.5px solid transparent;
+  background:linear-gradient(to right,#FFE45E, #F9F9F9,#FF6392) border-box;
+  border-radius: 50%;
+  display: block;
+  box-shadow: 1px 3px 12px rgba(0, 0, 0, 0.18);
+  transition: transform .2s ease-out;
 }
 
 .user-info {
    flex-grow: 1;
 }
 
-.username {
-   display: block;
-   font-weight: bolder;
-   margin-left: 10px;
-   font-style: normal;
-   font-size: 20px;
+.user-info a{
+   position: relative;
+    text-decoration: none;
+    color: #000;
+    font-weight: 700;
+    font-size: 22px;
+    margin-bottom: 5px;
+    margin-left: 10px;
 }
-
+.user-info  a::after{
+   content: "";
+   position: absolute;
+   left: 0;
+   bottom: -3px;
+   width: 100%;
+   height: 3px;
+   background: #000000;
+   border-radius: 5px;
+   transform-origin: right;
+   transform: scaleX(0);
+   transition: transform .5s ;
+  
+}
+.user-info  a:hover::after {
+   transform-origin: left;
+   transform: scaleX(1);    
+}
 .time{
    display: flex;
    margin-left: 10px;
-   margin-top: 5px;
+   margin-top: 10px;
+   font-size: 15px;
 
-  
 }
 
 .clock{
@@ -187,6 +209,9 @@ h1 {
    height: 100%;
    height: 450px;
    border-radius: 10px;
+   /* border: 2px solid transparent; 
+    border-image: linear-gradient(to bottom, #FF6392,#FFE45E); 
+    border-image-slice: 1; */
 }
 
 .post-interactions {
@@ -210,18 +235,15 @@ h1 {
 .reaction{
    display: flex;
 }
-.post-interactions #love {
-   font-size: 1.5em;
-   color: #333;
-
-}
-.heart-fill{
+.reaction button ion-icon{
    width:60px;
    height: 45px;
-
+   color: #FF6392;
 }
-.heart-fill.filled{
-fill:#DF2957;
+.post-interactions #love {
+   font-size: 1.5em;
+   color: #FF6392;
+
 }
 .post-interactions .reaction span{
    font-size: 18px;
@@ -231,9 +253,8 @@ fill:#DF2957;
 }
 #share img {
     width: 100%;
-    max-width: 70px;
-    height: 60px;
-    padding-bottom: 10px;
+    max-width: 60px;
+    height: 40px;
     object-fit:fill;
     
  }
@@ -243,30 +264,76 @@ fill:#DF2957;
    height: 40px;
    object-fit: fill;
 }
+.bookmark-icon{
+   position: relative;
+   top: 10%;
+   right: 10px;
+   border: none;
+   outline: none;
+}
+.bookmark-icon ion-icon{
+   top: 10%;
+   right: 10px;
+   color: #FF6392;
+   font-size: 1.9em;
+}
 .post-description {
    padding: 10px 0;
 }
-.aba{
-   display:flex;
+.aba {
+   display: flex;
    gap: 25px;
-
 }
+
+.aba .recipeinfo {
+   display: flex;
+   flex-direction: column;
+}
+
+.aba .recipeinfo p {
+   margin-top: 0.5rem;
+}
+
+.aba a {
+   position: relative;
+   text-decoration: none;
+   color: #000;
+   font-weight: 700;
+   font-size: 22px;
+   margin-bottom: 5px;
+}
+
+.aba a::after {
+   content: "";
+   position: absolute;
+   left: 0;
+   bottom: -6px;
+   width: 100%;
+   height: 3px;
+   background: #000000;
+   border-radius: 5px;
+   transform-origin: right;
+   transform: scaleX(0);
+   transition: transform 0.5s;
+}
+
+.aba a:hover::after {
+   transform-origin: left;
+   transform: scaleX(1);
+}
+
 .rating_section {
    display: flex;
    justify-content: center;
    align-items: center;
-   margin-top: -9px;
+   margin-top: -25px;
    font-size: 24px;
 }
-.star {
-   cursor: pointer;
-   color: white;
-   transition: color 0.2s;
+
+.rating_section ion-icon {
+   color: #FFC400;
 }
 
-.star.active {
-   color: yellow;
-}
 #ratingValue{
    font-size: 13px;
    font-weight: lighter;

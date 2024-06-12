@@ -28,14 +28,19 @@
                             </div>
                             <div class="user-info">
                                 <a href="{% url 'otherprofile' post.user.id %}">
-                                    <span class="username">{{post.user.username}}</span>
+                                    {{post.user.username}}
                                 </a>
                                 <div class="time">
                                 <span class="clock"></span>
                                 <span class="posttime">{{post.posted}}</span>
                                 </div>
                             </div>
-                            
+                            <div class="bookmarkIcon">
+                                <button class="bookmark-icon" id="bookmark-{{post.pk}}" data-postid="{{ post.pk }}">
+                                    <ion-icon name="{% if post.pk in bookmarked_posts %}bookmark{% else %}bookmark-outline{% endif %}" ></ion-icon>
+                                </button>
+                            </div> 
+                                                        
                         </div>
                         <div class="post-content">
                             <a href="{% url 'recipe_detail' post.pk %}">
@@ -59,22 +64,22 @@
                             <button id="share">
                                 <img src="{% static 'img/reactions/share.png' %}" alt="">
                             </button>
-                            <div class="bookmark-icon clicked" id="bookmark-{{post.pk}}" data-postid="{{ post.pk }}">
-                                <ion-icon name="{% if post.pk in bookmarked_posts %}bookmark{% else %}bookmark-outline{% endif %}" class="filled" onclick="toggleBookmark(this)"></ion-icon>
-                            </div>
-                            
+                                                    
                         </div>
                         <div class="post-description">
                             <div class="aba">
-                                <h3><a href="{% url 'recipe_detail' post.pk %}">{{ post.name }}</a></h3>
+                                <div class="recipeinfo">
+                                    <span><a href="{% url 'recipe_detail' post.pk %}">{{ post.name }}</a></span>
+                                    <p>{{ post.description }}</p>
+                                </div>
                                 <div class="rating_section">
                                     {% for star in post.average_rating|times %}
                                         <ion-icon name="star"></ion-icon>
                                     {% endfor %}
                                 </div>
-                            <div class="ratingValue" id="ratingValue-{{post.pk}}"></div>
-                            <p>{{ post.description }}</p>
+                                <div class="ratingValue" id="ratingValue-{{post.pk}}"></div>
                             </div>
+                            
                         </div>
                     </div>
                 {% endfor %}
@@ -109,18 +114,13 @@
         </div>
     </div>
     
-    <script src="{% static 'js/feed.js' %}"></script>
-
-<script>
-    function toggleBookmark(icon) {
-        icon.classList.toggle('clicked');
-    }
     
-</script>
-
+<script src="{% static 'js/feed.js' %}"></script>
+<script src="{% static 'js/like.js' %}"></script>
+<script src="{% static 'js/bookmarkPost.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         // Function to get the CSRF token from the cookies
         function getCookie(name) {
@@ -177,7 +177,7 @@
             });
         });
     });
-    </script>
+    </script> -->
     
 </body>
 </html>
