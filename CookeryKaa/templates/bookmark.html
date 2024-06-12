@@ -5,8 +5,10 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Bookmark</title>
     <link rel="stylesheet" href="{% static 'css/bookmark.css' %}" />
+    <link rel="stylesheet" href="{%static 'css/feed.css'%}"/>
   </head>
   <body>
     <header id="header">
@@ -44,11 +46,13 @@
   
    
     <div class="author">
+      
         <a href="{% url 'myprofile' %}"><img src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" class="avatar" alt="{{user.username}}"/></a>
         <a class="name" href="{% url 'myprofile' %}"><span class="name">{{user.username}}</span></a>
     </div>
     <span class="msg">Here are all of your favourite dishes.</span>
     <div class="container">
+
       <div class="card__container" id="card-container">
         {% for recipe in bookmarked_recipes %}
         <article class="card__article" data-id="{{ recipe.id }}">
@@ -57,17 +61,17 @@
               <h2 class="card__title">{{ recipe.title }}</h2>
               <a href="{% url 'recipe_detail' recipe.id %}" class="card__button">Read More</a>
            </div>
-           <div class="bookmark-icon clicked" onclick="toggleBookmark(this)">
-             <ion-icon name="bookmark" class="filled"></ion-icon>
-             <ion-icon name="bookmark-outline" class="outline"></ion-icon>
-           </div>
+           <div class="bookmark-icon" data-postid="{{ recipe.id }}" data-csrf="{{ csrf_token }}">
+            <ion-icon name="bookmark-outline" onclick="toggleBookmark(this)"></ion-icon>
+            <input type="hidden" name="csrf_token" value="{csrf_token}">
+        </div>
         </article>
         {% endfor %}
      </div>
   </div>
     <!-- Hidden file input element -->
     <input type="file" id="file-input" style="display: none;">
-    <script>
+    <!--<script>
       document.addEventListener('DOMContentLoaded', () => {
         const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
         const bookmarkIcons = document.querySelectorAll('.bookmark-icon');
@@ -98,7 +102,8 @@
     }
     </script>
 
-    </script>
+    </script>-->
+    <script src="{% static 'js/bookmark.js' %}"></script>
     <script src ="js/profile.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
