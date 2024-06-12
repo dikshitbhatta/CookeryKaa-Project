@@ -19,8 +19,8 @@
           {% if user.is_authenticated %}
               <button id="notification-btn" class="hideOnMobile"><ion-icon name="notifications"></ion-icon></button>
               <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
-              <div class="profile-icon" onclick="menuToggle()" >
-                <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
+              <div class="profile-icon" onclick="toggleMenu()" >
+                <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture"width="50px" height="50px" style="border-radius: 50%; cursor: pointer; border: 2px solid #FF6392;">
               </div>
           {% else %}
               <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
@@ -65,6 +65,42 @@
         {% endfor %}
      </div>
   </div>
+  <div class="sub-menu-wrap" id="subMenu">
+    <div class="sub-menu">
+        <div class="user-info">
+            <h2>{{user.username}}</h2>
+        </div>
+        <hr>
+        <a href="{% url 'myprofile' %}" class="sub-menu-link">
+            <ion-icon name="person"></ion-icon>
+            <p>My Profile</p>
+            <span>></span>
+        </a>
+        <a href="{% url 'editprofile' %}" class="sub-menu-link">
+            <ion-icon name="pencil"></ion-icon>
+            <p>Edit Profile</p>
+            <span>></span>
+        </a>
+        <a href="" class="sub-menu-link">
+            <ion-icon name="cog"></ion-icon>
+            <p>Settings</p>
+            <span>></span>
+        </a>
+        <a href="{% url 'logout' %}" class="sub-menu-link">
+            <ion-icon name="log-out"></ion-icon>
+            <p>Logout</p>
+            <span>></span>
+        </a>
+    </div>
+</div>
+<script>
+    // Function to toggle the menu visibility
+    function toggleMenu() {
+        console.log('Profile icon clicked'); // Debugging log
+        let subMenu = document.getElementById('subMenu');
+        subMenu.classList.toggle('open-menu');
+    }
+</script>
     <!-- Hidden file input element -->
     <input type="file" id="file-input" style="display: none;">
     <script>

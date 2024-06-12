@@ -31,7 +31,7 @@
             {% if user.is_authenticated %}
                 <button id="notification-btn" class="hideOnMobile"><ion-icon name="notifications"></ion-icon></button>
                 <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
-                <div class="profile-icon" onclick="menuToggle()">
+                <div class="profile-icon" onclick="toggleMenu()">
                     <img class="img__container" id="pppp" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture">
                 </div>
             {% else %}
@@ -53,7 +53,7 @@
         <a href="{% url 'bookmark' %}"><button id="bookmark-btn"><ion-icon name="bookmark"></ion-icon></button></a>
         <button id="login-btn-popup-sb"><ion-icon name="person"></ion-icon></button>
     </nav>
-    <div class="information">
+    <div class="information"></div>
         <div id="google_translate_element"></div>
         <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
         <script>
@@ -304,6 +304,42 @@
         </div>
     </div>
 
+    <div class="sub-menu-wrap" id="subMenu">
+        <div class="sub-menu">
+            <div class="user-info">
+                <h2>{{user.username}}</h2>
+            </div>
+            <hr>
+            <a href="{% url 'myprofile' %}" class="sub-menu-link">
+                <ion-icon name="person"></ion-icon>
+                <p>My Profile</p>
+                <span>></span>
+            </a>
+            <a href="{% url 'editprofile' %}" class="sub-menu-link">
+                <ion-icon name="pencil"></ion-icon>
+                <p>Edit Profile</p>
+                <span>></span>
+            </a>
+            <a href="" class="sub-menu-link">
+                <ion-icon name="cog"></ion-icon>
+                <p>Settings</p>
+                <span>></span>
+            </a>
+            <a href="{% url 'logout' %}" class="sub-menu-link">
+                <ion-icon name="log-out"></ion-icon>
+                <p>Logout</p>
+                <span>></span>
+            </a>
+        </div>
+    </div>
+    <script>
+        // Function to toggle the menu visibility
+        function toggleMenu() {
+            console.log('Profile icon clicked'); // Debugging log
+            let subMenu = document.getElementById('subMenu');
+            subMenu.classList.toggle('open-menu');
+        }
+    </script>
 
     <script src="{% static 'js/profile.js' %}"></script>
     <script src="{% static 'js/recipe_detail.js' %}"></script>

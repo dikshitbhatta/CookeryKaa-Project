@@ -988,3 +988,79 @@ header.remove{
     object-fit: fill;
     cursor: pointer;
 }
+
+.sub-menu-wrap {
+    scroll-behavior: sticky;
+    position: absolute;
+    top: calc(10%); /* Adjust the top position to be just below the profile icon */
+    right: 10px;
+    width: 220px;
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.5s;
+    z-index: 9999;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  
+  .sub-menu-wrap.open-menu {
+    max-height: 400px;
+  }
+  
+  .sub-menu {
+    padding: 20px;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .user-info h2 {
+    font-weight: 500;
+  }
+  
+  .sub-menu hr {
+    border: 0;
+    height: 1px;
+    width: 100%;
+    background: #ccc;
+    margin: 15px 0;
+  }
+  
+  .sub-menu-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    margin: 12px 0;
+  }
+  
+  .sub-menu-link p {
+    width: 100%;
+    margin: 0;
+    font-size: 15px;
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .sub-menu-link ion-icon {
+    font-size: 24px;
+    margin-right: 10px;
+  }
+  
+  .sub-menu-link span {
+    font-size: 22px;
+    transition: transform 0.5s;
+  }
+  
+  .sub-menu-link:hover span {
+    transform: translateX(5px);
+  }
+  
+  .sub-menu-link:hover p {
+    font-size: 16px;
+  }
+  
