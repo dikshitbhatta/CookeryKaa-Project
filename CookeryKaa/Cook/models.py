@@ -12,3 +12,11 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+class Advertisement(models.Model):
+    title = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='advertisements/')
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title

@@ -5,10 +5,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.hashers import check_password
-from .models import Profile
+from .models import Profile,Advertisement
 from django.db.models import Count
 from post.models import Recipe, Bookmark, Likes, Stream, Follow
 from notifications.models import Notification
+from stories.models import Story, StoryStream
+from django.conf import settings
+from random import sample
 
 # Create your views here.
 def index(request):
@@ -19,6 +22,8 @@ def index(request):
     user_likes = []
     liked_posts = []
     bookmarked_recipes = []
+    suggested_users = []
+    ad = None
     if request.user.is_authenticated:
         notification_count = Notification.objects.filter(user=request.user,is_seen=False).count()
         notifications = Notification.objects.filter(user=request.user).order_by('-date')
@@ -26,8 +31,17 @@ def index(request):
         posts = Recipe.objects.exclude(user=request.user).annotate(like_count=Count('post_like')).order_by('-posted')
         user_likes = Likes.objects.filter(user=request.user)
         liked_posts = [like.recipe.id for like in user_likes]
+
+        logged_in_user = request.user
+        followed_users = Follow.objects.filter(follower=logged_in_user).values_list('following', flat=True)
+        second_degree_followed_users = Follow.objects.filter(follower__in=followed_users).values_list('following', flat=True)
+        suggested_users = User.objects.exclude(id__in=followed_users).exclude(id=logged_in_user.id).filter(id__in=second_degree_followed_users)
+        suggested_users = list(suggested_users)
+        suggested_users = sample(suggested_users, min(len(suggested_users), 4)) #getting 4 user followed by people whom we follow
+        
         bookmarked_recipes = list(Bookmark.objects.filter(user=request.user).values_list('recipe_id', flat=True))
 
+        ad = Advertisement.objects.filter(is_active=True).order_by('?').first()
     if request.method == 'POST':
         if 'register' in request.POST:
             return handle_register(request)
@@ -43,7 +57,9 @@ def index(request):
         'posts': posts,
         'liked_posts':liked_posts,
         'bookmarked_recipes':bookmarked_recipes,
-        'streams' : streams
+        'streams' : streams,
+        'ad': ad,
+        'suggested_users' : suggested_users
     })
 
 

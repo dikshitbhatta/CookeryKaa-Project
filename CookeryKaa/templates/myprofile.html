@@ -99,9 +99,9 @@
             {% for recipe in recipes %}
             <article class="card__article">
                 {% if recipe.photo %}
-                <img src="{{ recipe.photo.url }}" alt="{{ recipe.title }}" class="card__img">
+                <img src="{{ recipe.photo.url }}" alt="{{ recipe.name}}" class="card__img">
             {% else %}
-            <img src="{% static 'img/assests/default_photo.png' %}" alt="{{ recipe.title }}" class="card__img">
+            <img src="{% static 'img/assests/default_photo.png' %}" alt="{{ recipe.name }}" class="card__img">
             {% endif %}
               <div class="card__data">
                 <div class="manage">
@@ -117,7 +117,7 @@
                       </button></li>
                   </ul>
               </div>
-                <h2 class="card__title">{{ recipe.title }}</h2>
+                <h2 class="card__title">{{ recipe.name }}</h2>
                 <span class="card__description">{{ recipe.description }}</span>
                 <a href="{% url 'recipe_detail' recipe.pk %}" class="card__button">Start Cooking</a>
               </div>

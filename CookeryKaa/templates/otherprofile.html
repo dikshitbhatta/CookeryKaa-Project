@@ -26,7 +26,7 @@
             <button id="notification-btn" class="hideOnMobile"><ion-icon name="notifications"></ion-icon></button>
             <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
             <div class="profile-icon" onclick="toggleMenu()" >
-              <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture"width="50px"height="20px">
+              <img class="img__container" src="{% if logged_in_user.profile.picture %}{{ logged_in_user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture"width="50px"height="20px">
             </div>
         {% else %}
             <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
@@ -89,13 +89,13 @@
           {% for recipe in recipes %}
               <article class="card__article">
                   {% if recipe.photo %}
-                      <img src="{{ recipe.photo.url }}" alt="{{ recipe.title }}" class="card__img">
+                      <img src="{{ recipe.photo.url }}" alt="{{ recipe.name }}" class="card__img">
                   {% else %}
                   <img src="{% static 'img/assests/default_photo.png' %}" alt="{{ recipe.title }}" class="card__img">
                   {% endif %}
 
                   <div class="card__data">
-                      <h2 class="card__title">{{ recipe.title }}</h2>
+                      <h2 class="card__title">{{ recipe.name }}</h2>
                       <span class="card__description">{{ recipe.description }}</span>
                       <a href="{% url 'recipe_detail' recipe.pk %}" class="card__button">Start Cooking</a>
                   </div>
