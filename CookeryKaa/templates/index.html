@@ -549,7 +549,13 @@
   </div>
   </div>
 
-  
+  <script>
+    function menuToggle(){
+        const toggleMenu = document.querySelector('.menu');
+        toggleMenu.classList.toggle('active')
+    }
+
+  </script>
 
     <script src="{% static 'js/notifications.js' %}"></script>
     <script src="{%static 'js/swiper-bundle.min.js'%}"></script>
