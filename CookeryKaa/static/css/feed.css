@@ -243,6 +243,23 @@ fill:#DF2957;
    height: 40px;
    object-fit: fill;
 }
+
+.bookmark-icon ion-icon {
+   cursor: pointer;
+   color: black;
+   font-size: 40px;
+}
+
+/* Target ion-icon with .filled class inside .bookmark-icon */
+.bookmark-icon ion-icon.filled {
+    
+   color: #FF6392 !important; /* Change icon color to contrast with background */
+   border-radius: 50%; /* Apply border radius to create a circular shape */
+   padding: 5px; /* Add padding to increase the clickable area */
+}
+
+
+
 .post-description {
    padding: 10px 0;
 }

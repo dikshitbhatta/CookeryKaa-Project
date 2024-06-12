@@ -1,20 +1,67 @@
+    // Define the toggleBookmark function
+window.toggleBookmark = function(icon) {
+    const postId = icon.parentElement.getAttribute('data-postid');
+    const csrfToken = icon.parentElement.getAttribute('data-csrf');
+
+    fetch('/bookmark_recipe/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({ post_id: postId })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Toggle the filled class based on the bookmark status
+        if (data.bookmarked) {
+            // Change the icon to the filled version
+            icon.name = 'bookmark';
+            console.log('Post Bookmarked!');
+            alert('Post Bookmarked!');
+        } else {
+            // Change the icon back to the outline version
+            icon.name = 'bookmark-outline';
+            console.log('Post removed from bookmarks.');
+            alert('Post removed from bookmarks.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+};
+
 document.addEventListener('DOMContentLoaded', function() {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const posts = document.querySelectorAll('.post');
 
     posts.forEach(post => {
-        const postId= post.getAttribute('id').split('-')[1];
-        const loveButton = post.querySelector('.love-button');
-        const reactionCount = post.querySelector('.reaction_count');
-        const bookmarkIcon = post.querySelector('.bookmark-icon');
+        const postId = post.getAttribute('id').split('-')[1];
+        const bookmarkIcon = post.querySelector('.bookmark-icon ion-icon');
 
-        // Event listener for bookmark icon
-        bookmarkIcon.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent default action (e.g., following a link)
-            toggleBookmark(postId, this);
-        });
-
-        // Event listener for love button
+        // Fetch bookmark status for each post
+        fetch(`/get_bookmark_status/${postId}/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Update the bookmark icon based on the bookmark status
+            if (data.bookmarked) {
+                bookmarkIcon.setAttribute('name', 'bookmark');
+            } else {
+                bookmarkIcon.setAttribute('name', 'bookmark-outline');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+//if reqired in future
+// Event listener for love button
         // loveButton.addEventListener('click', function() {
         //     fetch(`/like/${postId}/`, {
         //         method: 'POST',
@@ -77,30 +124,3 @@ document.addEventListener('DOMContentLoaded', function() {
     //         });
     //     });
     // });
-
-    // Function to toggle bookmark status
-    function toggleBookmark(postId, icon) {
-        fetch('/bookmark_recipe/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify({ post_id: postId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.bookmarked) {
-                icon.querySelector('ion-icon').setAttribute('name', 'bookmark');
-                icon.classList.add('clicked');
-                alert('Post Bookmarked!');
-            } else {
-                icon.querySelector('ion-icon').setAttribute('name', 'bookmark-outline');
-                icon.classList.remove('clicked');
-                alert('Post removed from bookmarks.');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-})
-});

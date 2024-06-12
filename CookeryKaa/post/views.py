@@ -256,6 +256,16 @@ def bookmark_recipe(request):
         return JsonResponse({'error': str(e)}, status=400)
 
 
+def get_bookmark_status(request, recipe_id):
+    if request.user.is_authenticated:
+        user = request.user
+        recipe = Recipe.objects.get(pk=recipe_id)
+        bookmarked = Bookmark.objects.filter(user=user, recipe=recipe).exists()
+    else:
+        bookmarked = False
+
+    return JsonResponse({'bookmarked': bookmarked})
+
 def search(request):
     query = request.GET.get('query', '')
     results = Recipe.objects.filter(

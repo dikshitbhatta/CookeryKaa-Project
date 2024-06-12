@@ -472,6 +472,10 @@
                               <span class="posttime">{{post.posted}}</span>
                               </div>
                           </div>
+                          <div class="bookmark-icon" id="bookmark-{{post.pk}}" data-postid="{{ post.pk }}" data-csrf="{{ csrf_token }}">
+                            <ion-icon name="bookmark-outline" onclick="toggleBookmark(this)"></ion-icon>
+                        </div>
+                        
                           
                       </div>
                       <div class="post-content">
@@ -496,9 +500,7 @@
                           <button id="share">
                               <img src="{% static 'img/reactions/share.png' %}" alt="">
                           </button>
-                          <div class="bookmark-icon clicked" id="bookmark-{{post.pk}}" data-postid="{{ post.pk }}">
-                              <ion-icon name="{% if post.pk in bookmarked_posts %}bookmark{% else %}bookmark-outline{% endif %}" class="filled" onclick="toggleBookmark(this)"></ion-icon>
-                          </div>
+                          
                           
                       </div>
                       <div class="post-description">
@@ -548,13 +550,6 @@
   </div>
 
   
-    <script>
-    function menuToggle(){
-        const toggleMenu = document.querySelector('.menu');
-        toggleMenu.classList.toggle('active')
-    }
-
-  </script>
 
     <script src="{% static 'js/notifications.js' %}"></script>
     <script src="{%static 'js/swiper-bundle.min.js'%}"></script>
