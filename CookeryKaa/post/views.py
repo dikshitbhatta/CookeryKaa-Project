@@ -159,15 +159,10 @@ def like_post(request, post_id):
 
             if not created:
                 like.delete()
-                Notification.objects.filter(user=post.user, notification_type=1, recipe=post).delete()
+                # Update notification or any other related actions
                 return JsonResponse({'liked': False, 'count': post.likes.count()})
             else:
-                Notification.objects.create(
-                    user=post.user,
-                    message=f'{request.user.username} liked your recipe {post.name}.',
-                    notification_type=1,
-                    recipe=post
-                )
+                # Create notification or any other related actions
                 return JsonResponse({'liked': True, 'count': post.likes.count()})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
@@ -233,7 +228,6 @@ def follow_user(request):
             return JsonResponse({'status': 'already_following'})
     return JsonResponse({'status': 'error'}, status=400)
 
-
 @login_required
 @require_POST
 def bookmark_recipe(request):
@@ -243,13 +237,13 @@ def bookmark_recipe(request):
         post = get_object_or_404(Recipe, pk=post_id)
         bookmark, created = Bookmark.objects.get_or_create(user=request.user, recipe=post)
 
-        if created:
-            bookmarked = True
-            message = 'Post bookmarked!'
-        else:
+        if not created:
             bookmark.delete()
             bookmarked = False
             message = 'Post removed from bookmarks.'
+        else:
+            bookmarked = True
+            message = 'Post bookmarked!'
 
         return JsonResponse({'bookmarked': bookmarked, 'message': message})
     except Exception as e:
