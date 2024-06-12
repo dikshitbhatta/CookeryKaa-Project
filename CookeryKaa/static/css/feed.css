@@ -199,6 +199,20 @@ h1 {
    background-color: #b1abab;
 }
 
+.bookmark-icon{
+   position: relative;
+   top: 10%;
+   right: 10px;
+   border: none;
+   outline: none;
+}
+.bookmark-icon ion-icon{
+   top:10%;
+   right: 10px;
+   color: #FF6392;
+   font-size: 2.6em;
+}
+
 
 .post-content {
    text-align: center;

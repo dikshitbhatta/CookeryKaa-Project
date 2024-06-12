@@ -1,11 +1,16 @@
 {% load static %}
+{% csrf_token %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Responsive Profile Page</title>
+    <script>
+      const csrfToken = "{{ csrf_token }}";
+    </script>
     <link rel="stylesheet" href="{%static 'css/profiledrop.css' %}" /> 
     <link rel="stylesheet" href="{%static 'css/otherprofile.css' %}" /> 
   </head>
@@ -21,7 +26,7 @@
             <button id="notification-btn" class="hideOnMobile"><ion-icon name="notifications"></ion-icon></button>
             <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
             <div class="profile-icon" onclick="toggleMenu()" >
-              <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture"width="50px"height="50px">
+              <img class="img__container" src="{% if user.profile.picture %}{{ user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture"width="50px"height="20px">
             </div>
         {% else %}
             <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
@@ -46,6 +51,7 @@
     </nav>
 
     <div class="header__wrapper">
+      {% csrf_token %}
       <div class="cols__container">
           <div class="left__col">
               <div class="img__container" width="120px" height="120px">
@@ -55,7 +61,9 @@
               <p>{{ user.profile.bio }}</p>
               <p>{{ user.email }}</p>
           <button class="button" id="follow-btn" data-user-id="{{ user.id }}">
+            {% csrf_token %}
             Follow
+            <!-- <input type="hidden" name="csrf_token" value="{csrf_token}"> -->
             {% comment %} {% if already_following %}  
               Unfollow
             {%else%}
@@ -102,6 +110,7 @@
 </div>
 
 
+<!--
 <script>
 document.getElementById('follow-btn').addEventListener('click', function() {
   const userId = this.getAttribute('data-user-id');
@@ -150,10 +159,12 @@ document.getElementById('follow-btn').addEventListener('click', function() {
   updateCounts();
 </script>
 
-
+-->
 <!-- Hidden file input element -->
 <input type="file" id="file-input" style="display: none;">
+
 <script src="{% static 'js/profile.js' %}"></script>
+<script src="{% static 'js/follow_unfollow.js' %}"></script>
 
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

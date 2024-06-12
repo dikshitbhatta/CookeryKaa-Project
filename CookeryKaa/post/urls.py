@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import add_recipe, recipe_detail, feed, myprofile,otherprofile, bookmark, follow_user, like_post, add_review,bookmark_recipe,get_bookmark_status,contactus,kitchenware
+from .views import add_recipe, recipe_detail, feed, myprofile,otherprofile, bookmark, follow_user, like_post, add_review,bookmark_recipe,get_bookmark_status,contactus,kitchenware,unfollow_user
 from django.conf import settings
 from . import views
 from django.conf.urls.static import static
@@ -24,4 +24,6 @@ urlpatterns = [
     path('get_bookmark_status/<int:recipe_id>/', get_bookmark_status, name='get_bookmark_status'),
     path('contactus/',contactus,name="contactus"),
     path('kitchenware/',kitchenware,name='kitchenware'),
+    path('follow/<int:user_id>/', follow_user, name='follow_user'),
+    path('unfollow/<int:user_id>/', unfollow_user, name='unfollow_user'),
 ]

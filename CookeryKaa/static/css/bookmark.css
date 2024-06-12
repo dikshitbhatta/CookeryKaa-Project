@@ -390,6 +390,7 @@ header.remove{
   }
   
   .card__container {
+    position: relative;
     display: grid;
     row-gap: 3.5rem;
     margin-top: 6rem;
@@ -458,27 +459,19 @@ header.remove{
   .card__button:hover {
     text-decoration: underline;
   }
-  .bookmark-icon {
-    padding: 5px 5px;
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
+  .bookmark-icon{
+    position: relative;
+    top: 10%;
     right: 10px;
-    font-size: 1.7em;
-    color: var(--first-color);/* Customize the color as needed */
+    border: none;
+    outline: none;
  }
-
-.bookmark-icon .outline {
-    display: none;
-}
-
-.bookmark-icon.clicked .filled {
-    display: none;
-}
-
-.bookmark-icon.clicked .outline {
-    display: block;
-}
+ .bookmark-icon ion-icon{
+    top:10%;
+    right: 10px;
+    color: #FF6392;
+    font-size: 2.6em;
+ }
   /* Naming animations in hover */
   .card__article:hover .card__data {
     animation: show-data 1s forwards;

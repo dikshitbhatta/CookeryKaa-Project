@@ -214,15 +214,12 @@ def otherprofile(request, user_id):
 
 
 @login_required
-def follow_user(request):
+def follow_user(request, user_id):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        user_id = data.get('user_id')
         user_to_follow = get_object_or_404(User, id=user_id)
         follow, created = Follow.objects.get_or_create(follower=request.user, following=user_to_follow)
         
         if created:
-            # Successfully followed
             Notification.objects.create(
                 user=user_to_follow,
                 message=f'{request.user.username} started following you.',
@@ -230,9 +227,26 @@ def follow_user(request):
             )
             return JsonResponse({'status': 'followed'})
         else:
-            # Already following
             return JsonResponse({'status': 'already_following'})
     return JsonResponse({'status': 'error'}, status=400)
+
+@login_required
+def unfollow_user(request, user_id):
+    if request.method == 'POST':
+        user_to_unfollow = get_object_or_404(User, id=user_id)
+        follow = Follow.objects.filter(follower=request.user, following=user_to_unfollow).first()
+        
+        if follow:
+            follow.delete()
+            Notification.objects.filter(user=user_to_unfollow, notification_type=3).delete()
+            return JsonResponse({'status': 'unfollowed'})
+        else:
+            return JsonResponse({'status': 'not_following'})
+    return JsonResponse({'status': 'error'}, status=400)
+
+
+
+
 
 @login_required
 @require_POST
