@@ -149,26 +149,28 @@ def handle_register(request):
         email = request.POST.get('email')
         pass1 = request.POST.get('password1')
         pass2 = request.POST.get('password2')
-        
+
+        errors = {}
+
         if pass1 != pass2:
-            messages.error(request, "Passwords do not match")
-            return redirect('index')
+            errors['password'] = 'Passwords do not match'
         
         if User.objects.filter(username=uname).exists():
-            messages.error(request,"Username already taken")
-            return redirect('index')
+            errors['username'] = 'Username already taken'
         
         if User.objects.filter(email=email).exists():
-            messages.error(request, "Email already used")
-            return redirect('index')
+            errors['email'] = 'Email already used'
         
-        my_user = User.objects.create_user(uname,email,pass1)
+        if errors:
+            return JsonResponse({'success': False, 'errors': errors}, status=400)
+        
+        my_user = User.objects.create_user(uname, email, pass1)
         my_user.save()
-        #Creating a profile object
-        Profile.objects.create(user=my_user, picture = 'profile_pictures/default.png')
-        messages.success(request,"User Created Successfuly")
-        return redirect('index')
-
+        Profile.objects.create(user=my_user, picture='profile_pictures/default.png')
+        
+        return JsonResponse({'success': True}, status=200)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 def handle_login(request):
     if request.method == "POST":
