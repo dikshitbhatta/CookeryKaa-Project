@@ -11,5 +11,6 @@ urlpatterns = [
     # path('feed/',views.feed,name='feed'),
     path('logout/',views.logout_view, name='logout'),
     path('editprofile/',views.editprofile, name='editprofile'),
-    path('change_password/', views.change_password,name='change_password')
+    path('change_password/', views.change_password,name='change_password'),
+    path('delete-account/',views.delete_account,name='delete_account')
 ]
