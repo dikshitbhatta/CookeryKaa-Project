@@ -33,9 +33,11 @@
     <header id="header">
         <a href="{% url 'index' %}"><img class="logo" src="{% static 'img/assests/flogo.png' %}" alt="Logo"></a>
         <div class="search_box">
-            <input type="text" placeholder="I am craving....">
-            <button class = "search-btn"><ion-icon name="search"></ion-icon></button>
-            <a href="#"></a>
+            <form method="get" action="{%url 'search'%}">
+                <input type="text" placeholder="I am craving...." name="query" required>
+                <button class="search" type="submit"><ion-icon name="search"></ion-icon></button>
+            </form>
+            <!-- <ul id="suggestions" style="border: 1px solid #ccc; display: none;"></ul> -->
         </div>
         <div class="sidekoelements">
             {% if user.is_authenticated %}
@@ -118,7 +120,7 @@
                   </ul>
               </div>
                 <h2 class="card__title">{{ recipe.name }}</h2>
-                <span class="card__description">{{ recipe.description }}</span>
+                
                 <a href="{% url 'recipe_detail' recipe.pk %}" class="card__button">Start Cooking</a>
               </div>
             </article>
@@ -128,6 +130,7 @@
               <button id="uploadRecipe">Add Recipe</button>
             </div>
           </div>
+        </div>
         </div>
 
         <div class="sub-menu-wrap" id="subMenu">

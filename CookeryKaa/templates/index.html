@@ -169,45 +169,48 @@
 
         <div class="form-box login ">
             <h2>Login</h2>
-            <form action="{% url 'index' %}" method ="post">
+          <form id="login-form" action="{% url 'index' %}" method="post">
               {% csrf_token %}
-                <div class="input-box">
-                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                    <input type="email" id="email" name="email" required>
-                    <label>Email</label>
-                </div>
-                <div class="input-box">
-                    <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-                    <input type="password" class="password-field" id="password" name="password" required>
-                    <ion-icon name="eye-off" class="eye-off"></ion-icon>
-                    <ion-icon name="eye" class="eye"></ion-icon>
-                    <label>Password</label>
-                </div>
-                <div class="remember-forget">
-                    <label>
-                        <input type="checkbox">
-                        Remember Me
-                    </label>
-                    <a href="{% url 'account_reset_password' %}">Forgot Password?</a>
-                </div>
-                <div type="submit" name ="login" class="button-container-2">
-                  <span class ="mas">LOGIN</span>
-                  <button type="submit" name ="login" class="btn">LOGIN</button>
-                </div>
-                <div class="continue-with">
-                    <p> OR CONTINUE WITH</p>
-                    <button type="button" class="facebook-sign-in" onclick="window.location.href='{% provider_login_url 'facebook' %}'">
-                      <ion-icon name="logo-facebook"class="logo-app"></ion-icon></button>
-                    <button type="button" class="google-sign-in" onclick="window.location.href='{% provider_login_url 'google' %}'">
-                      <ion-icon name="logo-google"class="logo-app"></ion-icon></button>
-                </div>
-                <div class="login-register">
-                    <p>Don't have an account?
-                        <a href="#"class="register-link">Register</a>
-                    </p>
-                </div>
-            </form>
-        </div>
+              <div class="input-box">
+                  <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                  <input type="email" id="email" name="email" required>
+                  <label>Email</label>
+              </div>
+              <div class="input-box">
+                  <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                  <input type="password" class="password-field" id="password" name="password" required>
+                  <ion-icon name="eye-off" class="eye-off"></ion-icon>
+                  <ion-icon name="eye" class="eye"></ion-icon>
+                  <label>Password</label>
+              </div>
+              <div class="remember-forget">
+                  <label>
+                      <input type="checkbox">
+                      Remember Me
+                  </label>
+                  <a href="{% url 'account_reset_password' %}">Forgot Password?</a>
+              </div>
+              <div id="error-msg" style="display: none;">Invalid username or password.</div>
+              <div type="submit" name="login" class="button-container-2">
+                  <span class="mas">LOGIN</span>
+                  <button type="submit" name="login" class="btn">LOGIN</button>
+              </div>
+              <div class="continue-with">
+                  <p> OR CONTINUE WITH</p>
+                  <button type="button" class="facebook-sign-in" onclick="window.location.href='{% provider_login_url 'facebook' %}'">
+                      <ion-icon name="logo-facebook" class="logo-app"></ion-icon>
+                  </button>
+                  <button type="button" class="google-sign-in" onclick="window.location.href='{% provider_login_url 'google' %}'">
+                      <ion-icon name="logo-google" class="logo-app"></ion-icon>
+                  </button>
+              </div>
+              <div class="login-register">
+                  <p>Don't have an account?
+                      <a href="#" class="register-link">Register</a>
+                  </p>
+              </div>
+          </form>
+      </div>
 
         <div class="form-box register">
             <h2>Registration</h2>

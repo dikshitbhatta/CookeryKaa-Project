@@ -207,11 +207,12 @@ def myprofile(request):
 
 
 def otherprofile(request, user_id):
+    logged_in_user = request.user
     user = get_object_or_404(User, pk=user_id)
     recipes = Recipe.objects.filter(user=user).order_by('-posted')
     followers_count = Follow.objects.filter(following=user).count()
     following_count = Follow.objects.filter(follower=user).count()
-    return render(request, 'otherprofile.html', {'user': user, 'recipes': recipes,'followers_count': followers_count,'following_count': following_count})
+    return render(request, 'otherprofile.html', {'user': user, 'recipes': recipes,'followers_count': followers_count,'following_count': following_count,'logged_in_user':logged_in_user})
 
 @login_required
 def follow_user(request):

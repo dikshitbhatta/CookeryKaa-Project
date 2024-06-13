@@ -23,9 +23,12 @@
     <header id="header">
         <a href="{% url 'index' %}"><img class="logo" src="{% static 'img/assests/flogo.png' %}"></a>
         <div class="search_box">
-            <input type="text" placeholder="I am craving....">
-            <button class="search-btn"><ion-icon name="search"></ion-icon></button>
-            <a href="#"></a>
+            <form method="get" action="{%url 'search'%}">
+                <input type="text" placeholder="I am craving...." name="query" required>
+                <button class="search" type="submit"><ion-icon name="search"></ion-icon></button>
+                
+            </form>
+            <!-- <ul id="suggestions" style="border: 1px solid #ccc; display: none;"></ul> -->
         </div>
         <div class="sidekoelements">
             {% if user.is_authenticated %}
@@ -125,20 +128,20 @@
                 </li>
                 {% endif %}
                 {% for direction in directions %}
-                <li>
-                    <h3>Step {{ forloop.counter }}</h3>
-                    <span class="step-content">
-                        {% if direction.photo %}
-                            <img src="{{ direction.photo.url }}" alt="Step {{ forloop.counter }}"
-                            data-step="{{forloop.counter}}"
-                            data-photo="{{direction.photo.url}}"
-                            data-step-text="{{direction.step}}">
-                            <button class="expand"><ion-icon name="expand-outline"></ion-icon></button>
-                        {% endif %}
-                    </span>
-                    <p>{{ direction.step }}</p>
-                </li>
-                {% endfor %}
+                    <li>
+                        <h3>Step {{ forloop.counter }}</h3>
+                        <span class="step-content">
+                            {% if direction.photo %}
+                                <img src="{{ direction.photo.url }}" alt="Step {{ forloop.counter }}"
+                                data-step="{{ forloop.counter }}"
+                                data-photo="{{ direction.photo.url }}"
+                                data-step-text="{{ direction.step }}">
+                                <button class="expand"><ion-icon name="expand-outline"></ion-icon></button>
+                            {% endif %}
+                        </span>
+                        <p>{{ direction.step }}</p>
+                    </li>
+                    {% endfor %}
             </ul>
         </div>
         <div class="ingredientsDetails">
@@ -339,6 +342,34 @@
             let subMenu = document.getElementById('subMenu');
             subMenu.classList.toggle('open-menu');
         }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select all expand buttons
+            document.querySelectorAll('.expand').forEach(button => {
+                button.addEventListener('click', () => {
+                    // Get the data attributes from the clicked button
+                    const stepNumber = button.previousElementSibling.getAttribute('data-step');
+                    const photoUrl = button.previousElementSibling.getAttribute('data-photo');
+                    const stepText = button.previousElementSibling.getAttribute('data-step-text');
+    
+                    // Update the full view content
+                    const stepPhoto = document.querySelector('.step-fullview .stepPhoto');
+                    const stepNumberElement = document.querySelector('.step-fullview .stepNumber');
+                    const stepTextElement = document.querySelector('.step-fullview .stepText');
+    
+                    stepPhoto.src = photoUrl;
+                    stepNumberElement.textContent = `Step ${stepNumber}`;
+                    stepTextElement.textContent = stepText;
+    
+                    // Show the full view
+                    document.querySelector('.step-fullview').style.display = 'block';
+                });
+            });
+    
+            // Close button for step full view
+            document.querySelector('.step-fullview .close-btn').addEventListener('click', () => {
+                document.querySelector('.step-fullview').style.display = 'none';
+            });
+        });
     </script>
 
     <script src="{% static 'js/profile.js' %}"></script>

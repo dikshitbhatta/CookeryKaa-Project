@@ -292,25 +292,46 @@ header.remove{
 #close-sidebar:hover{
   font-size: 2.3em; ;
 }
-.search-btn{
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 45px;
-  width: 45px;
-  background: transparent;
-  border: none;
-  outline: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
+.search_box{
+    position: relative;
+    width: 100%;
+    max-width: 840px;
+    height: 45px;
+    background: #F9F9F9;
+    border: 1px solid #000000;
+    border-radius: 15px;
+    box-sizing: border-box;
+}
+.search_box:hover input{
+    width: 100%;
+}
+.search_box input{
+    width: 100%;
+    height: 45px;
+    outline: 0;
+    border: none;
+    font-weight: 700;
+    background:transparent;
+    padding: 20px;
+}
+.search{
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 45px;
+    width: 45px;
+    background: transparent;
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 
 }
-.search-btn ion-icon{
-  font-size: 1.5em;
-  color: #000000;
-  transition: .2s ease;
+.search ion-icon{
+    font-size: 1.5rem;
+    color: #000000;
 }
 .header__wrapper{
   margin-top: 13%;
@@ -321,6 +342,7 @@ header.remove{
   max-width: 350px;
   position: relative;
   margin: 0 auto;
+
 }
 
 .header__wrapper .cols__container .left__col .img__container {
@@ -478,7 +500,8 @@ header.remove{
     gap: 50px;
   }
   .header__wrapper .cols__container .left__col {
-    padding: 25px 0px;
+    padding: 50px 0px;
+    margin-top: 60px;
   }
   .header__wrapper .cols__container .right__col nav ul {
     flex-direction: row;
@@ -493,8 +516,9 @@ header.remove{
 
 @media (min-width: 1017px) {
   .header__wrapper .cols__container .left__col {
-    margin: 0;
     margin-right: auto;
+    margin: 0;
+  
   }
   .header__wrapper .cols__container .right__col nav {
     flex-direction: row;

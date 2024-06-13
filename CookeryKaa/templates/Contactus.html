@@ -13,8 +13,12 @@
   <header id="header">
     <a href="{% url 'index' %}"><img class="logo" src="{%static 'img/assests/flogo.png'%}"></a>
     <div class="search_box">
-        <input type="text" placeholder="I am craving....">
-        <a href="#"></a>
+        <form method="get" action="{%url 'search'%}">
+            <input type="text" placeholder="I am craving...." name="query" required>
+            <button class="search" type="submit"><ion-icon name="search"></ion-icon></button>
+            
+        </form>
+        <!-- <ul id="suggestions" style="border: 1px solid #ccc; display: none;"></ul> -->
     </div>
     <div class="sidekoelements">
       {% if user.is_authenticated %}

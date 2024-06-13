@@ -308,7 +308,7 @@ header.remove{
 }
 
 .wrapper{
-    position: absolute;
+    position: fixed;
     width: 400px;
     height: 500px;
     margin-top: 100px;

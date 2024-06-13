@@ -18,15 +18,19 @@
     <header id="header">
       <a href="{% url 'index' %}"><img class="logo" src="{%static 'img/assests/flogo.png'%}" alt="Logo"></a>
       <div class="search_box">
-        <input type="text" placeholder="I am craving...." />
-        <a href="#"></a>
-      </div>
+        <form method="get" action="{%url 'search'%}">
+            <input type="text" placeholder="I am craving...." name="query" required>
+            <button class="search" type="submit"><ion-icon name="search"></ion-icon></button>
+            
+        </form>
+        <!-- <ul id="suggestions" style="border: 1px solid #ccc; display: none;"></ul> -->
+    </div>
       <div class="sidekoelements">
         {% if user.is_authenticated %}
             <button id="notification-btn" class="hideOnMobile"><ion-icon name="notifications"></ion-icon></button>
             <a href="{% url 'bookmark' %}"><button id="bookmark-btn" class="hideOnMobile"><ion-icon name="bookmark"></ion-icon></button></a>
             <div class="profile-icon" onclick="toggleMenu()" >
-              <img class="img__container" src="{% if logged_in_user.profile.picture %}{{ logged_in_user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture"width="50px"height="20px">
+                <img class="img__container" src="{% if logged_in_user.profile.picture %}{{ logged_in_user.profile.picture.url }}{% else %}{% static 'img/profile/default.png' %}{% endif %}" alt="Profile Picture"width="50px"height="20px" style="border: 2px solid#ff6382; border-radius: 50%; cursor: pointer;">
             </div>
         {% else %}
             <button id="login-btn-popup" class="hideOnMobile"><ion-icon name="person"></ion-icon></button>
@@ -111,6 +115,42 @@
 </div>
 
 
+<div class="sub-menu-wrap" id="subMenu">
+    <div class="sub-menu">
+        <div class="user-info">
+            <h2>{{logged_in_user.username}}</h2>
+        </div>
+        <hr>
+        <a href="{% url 'myprofile' %}" class="sub-menu-link">
+            <ion-icon name="person"></ion-icon>
+            <p>My Profile</p>
+            <span>></span>
+        </a>
+        <a href="{% url 'editprofile' %}" class="sub-menu-link">
+            <ion-icon name="pencil"></ion-icon>
+            <p>Edit Profile</p>
+            <span>></span>
+        </a>
+        <a href="" class="sub-menu-link">
+            <ion-icon name="cog"></ion-icon>
+            <p>Settings</p>
+            <span>></span>
+        </a>
+        <a href="{% url 'logout' %}" class="sub-menu-link">
+            <ion-icon name="log-out"></ion-icon>
+            <p>Logout</p>
+            <span>></span>
+        </a>
+    </div>
+</div>
+<script>
+    // Function to toggle the menu visibility
+    function toggleMenu() {
+        console.log('Profile icon clicked'); // Debugging log
+        let subMenu = document.getElementById('subMenu');
+        subMenu.classList.toggle('open-menu');
+    }
+</script>
 
 <script>
 

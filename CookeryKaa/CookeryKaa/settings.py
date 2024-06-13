@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-^^o+bsxh2p=uy+i0(9y%0e&d0+3p0!rn1k&5h+-_o39+o4#fj@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -93,6 +93,7 @@ AUTHENTICATION_BACKENDS = [
 
 WSGI_APPLICATION = 'CookeryKaa.wsgi.application'
 
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:8000']
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -103,7 +104,7 @@ DATABASES = {
         'NAME': 'CookeryKaa',
         'USER': 'postgres',
         'PASSWORD' : '$#!$#!Rpostgre',
-        'HOST' : 'localhost'
+        'HOST' : 'localhost',
     }
 }
 

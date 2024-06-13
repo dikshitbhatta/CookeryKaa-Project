@@ -14,8 +14,12 @@
     <header id="header">
         <a href="{% url 'index' %}"><img class="logo" src="{%static 'img/assests/flogo.png'%}"></a>
         <div class="search_box">
-            <input type="text" placeholder="I am craving....">
-            <a href="#"></a>
+            <form method="get" action="{%url 'search'%}">
+                <input type="text" placeholder="I am craving...." name="query" required>
+                <button class="search" type="submit"><ion-icon name="search"></ion-icon></button>
+                
+            </form>
+            <!-- <ul id="suggestions" style="border: 1px solid #ccc; display: none;"></ul> -->
         </div>
         <div class="sidekoelements">
           {% if user.is_authenticated %}
@@ -58,8 +62,8 @@
         <article class="card__article" data-id="{{ recipe.id }}">
            <img src="{%if recipe.photo %}{{ recipe.photo.url }}{%else%}{%static 'img/assests/default_photo.png'%}{%endif%}" alt="{{ recipe.title }}" class="card__img">
            <div class="card__data">
-              <h2 class="card__title">{{ recipe.title }}</h2>
-              <a href="{% url 'recipe_detail' recipe.id %}" class="card__button">Read More</a>
+              <h2 class="card__title">{{ recipe.name }}</h2>
+              <a href="{% url 'recipe_detail' recipe.id %}" class="card__button">Start Cooking</a>
            </div>
            <div class="bookmark-icon" data-postid="{{ recipe.id }}" data-csrf="{{ csrf_token }}">
             <ion-icon name="bookmark-outline" onclick="toggleBookmark(this)"></ion-icon>
