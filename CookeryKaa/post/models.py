@@ -210,13 +210,13 @@ post_delete.connect(Likes.user_unlike_post, sender=Likes)
 post_save.connect(Follow.user_follow, sender=Follow)
 post_delete.connect(Follow.user_unfollow, sender=Follow)
 
-class Notification(models.Model):
-    user = models.ForeignKey(User, related_name='notifications', on_delete=models.CASCADE)
-    sender = models.ForeignKey(User, related_name='sent_notifications', on_delete=models.CASCADE)
-    message = models.CharField(max_length=255)
-    notification_type = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_read = models.BooleanField(default=False)
+#class Notification(models.Model):
+    #user = models.ForeignKey(User, related_name='notifications', on_delete=models.CASCADE)
+    #sender = models.ForeignKey(User, related_name='sent_notifications', on_delete=models.CASCADE)
+    #message = models.CharField(max_length=255)
+    #notification_type = models.IntegerField()
+    #created_at = models.DateTimeField(auto_now_add=True)
+    #is_read = models.BooleanField(default=False)
 
 # class Follow(models.Model):
 #     follower = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)

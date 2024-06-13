@@ -155,20 +155,27 @@ def feed(request):
 def like_post(request, post_id):
     if request.method == 'POST':
         try:
+            print(f"Fetching post with ID: {post_id}")
             post = get_object_or_404(Recipe, pk=post_id)
+            print(f"Post fetched: {post}")
+
             like, created = Likes.objects.get_or_create(user=request.user, recipe=post)
+            print(f"Like object: {like}, Created: {created}")
 
             if not created:
                 like.delete()
-                # Update notification or any other related actions
+                print("Like deleted")
                 return JsonResponse({'liked': False, 'count': post.likes.count()})
             else:
-                # Create notification or any other related actions
+                print("Like created")
                 return JsonResponse({'liked': True, 'count': post.likes.count()})
+
         except Exception as e:
+            print(f"Error: {str(e)}")
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
+        
 
         
 # @login_required

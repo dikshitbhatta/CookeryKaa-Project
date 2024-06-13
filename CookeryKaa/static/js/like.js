@@ -24,15 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const heartIcon = this.querySelector('ion-icon');
             const reactionCount = document.getElementById(`reaction_count-${postId}`);
 
-            // Update the heart icon immediately
-            if (heartIcon.getAttribute('name') === 'heart-outline') {
-                heartIcon.setAttribute('name', 'heart');
-                reactionCount.textContent = parseInt(reactionCount.textContent) + 1; // Increment like count
-            } else {
-                heartIcon.setAttribute('name', 'heart-outline');
-                reactionCount.textContent = parseInt(reactionCount.textContent) - 1; // Decrement like count
-            }
-
             // Make the POST request using Fetch API
             fetch(`/like/${postId}/`, {
                 method: 'POST',
@@ -48,11 +39,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return response.json();
             })
+            .then(data => {
+                if (data.liked) {
+                    heartIcon.setAttribute('name', 'heart');
+                    reactionCount.textContent = parseInt(reactionCount.textContent) + 1;
+                } else {
+                    heartIcon.setAttribute('name', 'heart-outline');
+                    reactionCount.textContent = parseInt(reactionCount.textContent) - 1;
+                }
+            })
             .catch(error => {
                 console.error('There was an error liking/unliking the post:', error);
+                // Optionally revert the UI change on error
+                if (heartIcon.getAttribute('name') === 'heart') {
+                    heartIcon.setAttribute('name', 'heart-outline');
+                    reactionCount.textContent = parseInt(reactionCount.textContent) - 1;
+                } else {
+                    heartIcon.setAttribute('name', 'heart');
+                    reactionCount.textContent = parseInt(reactionCount.textContent) + 1;
+                }
             });
         });
     });
-    
 });
-
