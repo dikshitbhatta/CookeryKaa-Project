@@ -13,6 +13,11 @@ from notifications.models import Notification
 from stories.models import Story, StoryStream
 from django.conf import settings
 from random import sample
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+
 
 # Create your views here.
 def get_suggested_users(request):
@@ -255,3 +260,15 @@ def change_password(request):
         return render(request,'settings.html')
     else:
         return render(request,'settings.html')  # Redirect to profile settings page if accessed via GET request
+    
+
+@csrf_exempt
+@require_POST
+def delete_account(request):
+    if request.user.is_authenticated:
+        user = request.user
+        user.delete()  # Delete the user account
+        logout(request)  # Log out the user
+        return JsonResponse({'status': 'success'}, status=200)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'User not logged in'}, status=401)

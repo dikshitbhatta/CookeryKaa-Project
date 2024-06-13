@@ -78,7 +78,8 @@
                 </div>
                 <div class="bottombtn">
                     <button type="submit">Submit</button>
-                    <button type="button" class="deactivate-btn">Temporarily deactivate my account</button>
+                    <button type="button" id ="deactivateBtn" class="deactivate-btn">Deactivate my account</button>
+                    {% csrf_token %}
                 </div>
                 
             </form>
@@ -127,6 +128,50 @@
     <script src="{%static 'js/settings.js'%}"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script>
+        document.getElementById('deactivateBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete your account?')) {
+                // Send a request to the backend to delete the account and logout
+                fetch('/delete-account/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')  // Add CSRF token for security
+                    },
+                    body: JSON.stringify({ action: 'delete' })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to the logout page or home page after successful deletion
+                        window.location.href = '/logout/';
+                    } else {
+                        alert('There was an error deleting your account. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('There was an error deleting your account. Please try again.');
+                });
+            }
+        });
+        
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        </script>
 
 </body>
 </html>
