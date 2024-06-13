@@ -94,9 +94,18 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .then(response => response.json())
       .then(data => {
-          if (data.success) {
-              window.location.href = '/'; // Redirect to home page on successful registration
-          } else {
+        if (data.success) {
+         
+          registerErrorMsg.innerText = data.message;
+          registerErrorMsg.style.color = 'green';
+          registerErrorMsg.style.display = 'block';
+    
+          
+          setTimeout(() => {
+            window.location.href = '/'; 
+          }, 2000); // 2 seconds for suceess message
+    
+        } else {
               //previous error reset here
               document.querySelectorAll('.error-message').forEach(errorMessage => {
                   errorMessage.innerText = '';

@@ -168,7 +168,13 @@ def handle_register(request):
         my_user.save()
         Profile.objects.create(user=my_user, picture='profile_pictures/default.png')
         
-        return JsonResponse({'success': True}, status=200)
+        user = authenticate(username=uname, password=pass1)
+
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'success': True, 'message': 'Registration successful.\n Welcome to CookeryKaa.'}, status=200)
+        else:
+            return JsonResponse({'success': False, 'error': 'Authentication failed'}, status=400)
     
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
