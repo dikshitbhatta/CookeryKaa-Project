@@ -234,7 +234,6 @@
     }*/
 
     
-
     document.addEventListener("DOMContentLoaded", function() {
         const fileInput = document.getElementById("story-upload");
         const createStoryBtn = document.querySelector(".create-story-btn");
@@ -271,29 +270,10 @@
             }
         });
     
-        function fetchStories() {
-            fetch('/get_stories/')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (Array.isArray(data)) {
-                        data.forEach(story => {
-                            addStoryToUI(story);
-                        });
-                    } else {
-                        console.error('Data is not an array:', data);
-                    }
-                })
-                .catch(error => console.error('Error fetching stories:', error));
-        }
-    
         function addStoryToUI(data) {
             const story = document.createElement("div");
             story.classList.add("story");
+            story.dataset.storyId = data.id;  // Add story ID to dataset
             const img = document.createElement("img");
             img.src = data.content;
             const author = document.createElement("div");
@@ -307,19 +287,34 @@
     
             story.addEventListener("click", () => {
                 console.log("Story clicked:", data.id);
-                showFullView(data);
+                showFullView(data.id);
             });
         }
     
-        function showFullView(storyData) {
-            const storiesFullView = document.querySelector(".stories-fullview");
-            const StoryImageFull = storiesFullView.querySelector(".story img");
-            const StoryAuthorFull = storiesFullView.querySelector(".story .author");
+        function showFullView(storyId) {
+            console.log("Fetching full view for story ID:", storyId); // Debugging log
+            fetch(`/get_stories/?story_id=${storyId}`)
+                .then(response => {
+                    console.log("Response received:", response); // Debugging log
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Story data fetched:", data); // Debugging log
+                    const storiesFullView = document.querySelector(".stories-fullview");
+                    const StoryImageFull = storiesFullView.querySelector(".story img");
+                    const StoryAuthorFull = storiesFullView.querySelector(".story .author");
     
-            StoryImageFull.src = storyData.content;
-            StoryAuthorFull.innerHTML = `Posted by: ${storyData.author} <br> Caption: ${storyData.caption} <br> Posted at: ${storyData.posted}`;
+                    StoryImageFull.src = data.content;
+                    StoryAuthorFull.innerHTML = `Posted by: ${data.author} <br> Caption: ${data.caption} <br> Posted at: ${data.posted}`;
     
-            storiesFullView.classList.add("active");
+                    storiesFullView.classList.add("active");
+                })
+                .catch(error => {
+                    console.error('Error fetching story details:', error);
+                });
         }
     
         // Close full view modal
@@ -330,7 +325,24 @@
         });
     
         // Fetch and display stories on page load
-        fetchStories();
+        //fetchStories();--can be used 
+    
+        // Add event listeners to existing stories on page load
+        document.querySelectorAll('.story').forEach(story => {
+            const storyId = story.dataset.storyId;
+            story.addEventListener('click', () => {
+                showFullView(storyId);
+            });
+        });
+    
+        function fetchStories() {
+            fetch('/get_stories/')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(story => addStoryToUI(story));
+                })
+                .catch(error => console.error('Error fetching stories:', error));
+        }
     });
     
 

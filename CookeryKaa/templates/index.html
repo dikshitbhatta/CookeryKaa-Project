@@ -272,10 +272,8 @@
         </form>
     </div>
     
-    
-    
-        
     </div>
+
     <div class="stories-container">
         <div class="content">
             <div class="prev-btn"><ion-icon name="chevron-back-outline" class="prev-next-btn"></ion-icon></div>
@@ -293,32 +291,29 @@
                 </div>
             </div>
             <div class="next-btn active"><ion-icon name="chevron-forward-outline" class="prev-next-btn"></ion-icon></div>
-
             {% for story in stories %}
-            <div class="story">
+            <div class="story" data-story-id="{{ story.id }}">
                 <img src="{{story.content_url}}" alt="Story Image">
                 <div class="author">{{story.user__username}}</div>
             </div>
-            {% comment %} <pre>{{ story|safe }}</pre> {% endcomment %}
             {% endfor %}
-
-
-
         </div>
     </div>
-
+    
     <!-- Fullview Modal -->
     <div class="stories-fullview">
         <div class="story-close-btn"><ion-icon name="close-outline"></ion-icon></div>
         <div class="content">
             <div class="prev-btn"><ion-icon name="chevron-back-outline" class="prev-next-btn"></ion-icon></div>
             <div class="story">
-                <img src="" alt="">
+                <img src="" alt="Story">
                 <div class="author"></div>
+                <button class="story-close-btn">Close</button>
             </div>
             <div class="next-btn"><ion-icon name="chevron-forward-outline" class="prev-next-btn"></ion-icon></div>
         </div>
     </div>
+    
 
      <div class="container swiper">
       <div class="slide-container">
