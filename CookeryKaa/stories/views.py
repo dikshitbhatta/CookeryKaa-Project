@@ -36,8 +36,7 @@ def NewStory(request):
     # return render(request, 'index.html')
 
 
-@login_required
-@csrf_exempt
+
 def ShowMedia(request, stream_id=None):
     if 'story_id' in request.GET:
         # Fetch details for a specific story
