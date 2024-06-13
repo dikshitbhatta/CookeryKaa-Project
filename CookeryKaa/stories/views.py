@@ -1,43 +1,71 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from post.models import Stream
 
 from django.http import JsonResponse
 
 # Create your views here.
 from stories.models import Story, StoryStream
-from stories.forms import NewStoryForm
+from django.views.decorators.csrf import csrf_exempt
+
 
 from datetime import datetime, timedelta
 
 
 @login_required
+@csrf_exempt
 def NewStory(request):
-	user = request.user
-	file_objs = []
+    user = request.user
 
-	if request.method == "POST":
-		form = NewStoryForm(request.POST, request.FILES)
-		if form.is_valid():
-			file = request.FILES.get('content')
-			caption = form.cleaned_data.get('caption')
+    if request.method == "POST":
+        file = request.FILES.get('content')
+        if file:
+            story = Story(user=user, content=file)
+            story.save()
+            response_data = {
+                'id': story.id,
+                'author': story.user.username,
+                'imageURL': story.content.url,
+            }
+            return JsonResponse(response_data, status=201)
+        else:
+            return JsonResponse({"error": "No file uploaded"}, status=400)
 
-			story = Story(user=user, content=file, caption=caption)
-			story.save()
-			return redirect('index')
-	else:
-		form = NewStoryForm()
-
-	context = {
-		'form': form,
-	}
-
-	return render(request, 'newstory.html', context)
+    # return render(request, 'index.html')
 
 
 def ShowMedia(request, stream_id):
-	stories = StoryStream.objects.get(id=stream_id)
-	media_st = stories.story.all().values()
+    if 'story_id' in request.GET:
+        # Fetch details for a specific story
+        story_id = request.GET['story_id']
+        story = get_object_or_404(Story, id=story_id)
+        response_data = {
+            'id': story.id,
+            'content': story.content.url,
+            'author': story.user.username,
+            'caption': story.caption,
+            'posted': story.posted.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+        return JsonResponse(response_data)
+    
+    try:
+        # Fetch stories from the logged-in user's streams
+        user_streams = StoryStream.objects.filter(following=request.user)
+        user_stories = Story.objects.filter(storystream__in=user_streams, expired=False)
 
-	stories_list = list(media_st)
+        # Fetch stories from other users
+        other_stories = Story.objects.filter(~Q(user=request.user), expired=False)
 
-	return JsonResponse(stories_list, safe=False)
+        # Combine both sets of stories
+        all_stories = user_stories | other_stories
+
+        # Sort the combined stories by posting time
+        sorted_stories = all_stories.order_by('-posted').values('id', 'content', 'posted')
+
+        stories_list = list(sorted_stories)
+        return JsonResponse(stories_list, safe=False)
+    except StoryStream.DoesNotExist:
+        return JsonResponse({'error': 'StoryStream not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

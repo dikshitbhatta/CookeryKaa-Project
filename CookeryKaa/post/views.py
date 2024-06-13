@@ -146,7 +146,8 @@ def feed(request):
     return render(request, 'feed.html', {
         'posts': posts,
         'liked_posts':liked_posts,
-        'bookmarked_recipes':bookmarked_recipes
+        'bookmarked_recipes':bookmarked_recipes,
+        'streams':streams
         })
 
 
@@ -206,45 +207,60 @@ def myprofile(request):
 
 
 def otherprofile(request, user_id):
-    logged_in_user = request.user
     user = get_object_or_404(User, pk=user_id)
     recipes = Recipe.objects.filter(user=user).order_by('-posted')
     followers_count = Follow.objects.filter(following=user).count()
     following_count = Follow.objects.filter(follower=user).count()
-    return render(request, 'otherprofile.html', {'user': user, 'recipes': recipes,'followers_count': followers_count,'following_count': following_count, 'logged_in_user':logged_in_user})
-
-
-@login_required
-def follow_user(request, user_id):
-    if request.method == 'POST':
-        user_to_follow = get_object_or_404(User, id=user_id)
-        follow, created = Follow.objects.get_or_create(follower=request.user, following=user_to_follow)
-        
-        if created:
-            Notification.objects.create(
-                user=user_to_follow,
-                message=f'{request.user.username} started following you.',
-                notification_type=3
-            )
-            return JsonResponse({'status': 'followed'})
-        else:
-            return JsonResponse({'status': 'already_following'})
-    return JsonResponse({'status': 'error'}, status=400)
+    return render(request, 'otherprofile.html', {'user': user, 'recipes': recipes,'followers_count': followers_count,'following_count': following_count})
 
 @login_required
-def unfollow_user(request, user_id):
+def follow_user(request):
     if request.method == 'POST':
-        user_to_unfollow = get_object_or_404(User, id=user_id)
-        follow = Follow.objects.filter(follower=request.user, following=user_to_unfollow).first()
-        
-        if follow:
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+        target_user = get_object_or_404(User, id=user_id)
+
+        if request.user == target_user:
+            return JsonResponse({'status': 'error', 'message': 'You cannot follow yourself.'}, status=400)
+
+        follow, created = Follow.objects.get_or_create(follower=request.user, following=target_user)
+
+        if not created:
             follow.delete()
-            Notification.objects.filter(user=user_to_unfollow, notification_type=3).delete()
-            return JsonResponse({'status': 'unfollowed'})
+            status = 'unfollowed'
         else:
-            return JsonResponse({'status': 'not_following'})
-    return JsonResponse({'status': 'error'}, status=400)
+            status = 'followed'
 
+        followers_count = target_user.followers.count()
+        following_count = request.user.following.count()
+
+        return JsonResponse({
+            'status': status,
+            'followers_count': followers_count,
+            'following_count': following_count
+        })
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
+
+@login_required
+def get_follow_counts(request):
+    user_id = request.GET.get('user_id')
+    target_user = get_object_or_404(User, id=user_id)
+    followers_count = target_user.followers.count()
+    following_count = target_user.following.count()
+
+    return JsonResponse({
+        'followers_count': followers_count,
+        'following_count': following_count
+    })
+
+
+@login_required
+def check_follow_status(request):
+    user_id = request.GET.get('user_id')
+    target_user = get_object_or_404(User, id=user_id)
+    is_following = Follow.objects.filter(follower=request.user, following=target_user).exists()
+    return JsonResponse({'is_following': is_following})
 
 
 
@@ -364,7 +380,3 @@ def delete_recipe(request, pk):
     return JsonResponse({'success': True})
 
 
-def get_follow_counts(request):
-    followers_count = Follow.objects.filter(following=request.user).count()
-    following_count = Follow.objects.filter(follower=request.user).count()
-    return JsonResponse({'followers_count': followers_count, 'following_count': following_count})

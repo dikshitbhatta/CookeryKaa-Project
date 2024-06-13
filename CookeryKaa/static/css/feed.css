@@ -379,6 +379,9 @@ h1 {
    height: 40px;
    border-radius: 50%;
 }
+.suggestion p{
+   margin-left: 10px;
+}
 
 #Follow{
    margin-left: auto;

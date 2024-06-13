@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import add_recipe, recipe_detail, feed, myprofile,otherprofile, bookmark, follow_user, like_post, add_review,bookmark_recipe,get_bookmark_status,contactus,kitchenware,unfollow_user
+from .views import add_recipe, recipe_detail, feed, myprofile,otherprofile, bookmark, follow_user, like_post, add_review,bookmark_recipe,get_bookmark_status,contactus,kitchenware
 from django.conf import settings
 from . import views
 from django.conf.urls.static import static
@@ -10,9 +10,10 @@ urlpatterns = [
     path('myprofile/', myprofile, name="myprofile"),
     path('profile/<int:user_id>/', otherprofile, name='otherprofile'),
     path('bookmark/', bookmark, name="bookmark"),
-    path('follow/', follow_user, name="follow_user"),
+    path('follow/', views.follow_user, name='follow_user'),
     path('get_follow_counts/', views.get_follow_counts, name='get_follow_counts'),
     path('like/<int:post_id>/', like_post, name='like_post'),
+    path('check_follow_status/', views.check_follow_status, name='check_follow_status'),
     #path('rate/<int:post_id>/<int:rating>/', rate_post, name='rate_post'),
     path('add_review/<int:pk>', add_review, name='add_review'),
     path('bookmark_recipe/',bookmark_recipe, name='bookmark_recipe'),
@@ -24,6 +25,5 @@ urlpatterns = [
     path('get_bookmark_status/<int:recipe_id>/', get_bookmark_status, name='get_bookmark_status'),
     path('contactus/',contactus,name="contactus"),
     path('kitchenware/',kitchenware,name='kitchenware'),
-    path('follow/<int:user_id>/', follow_user, name='follow_user'),
-    path('unfollow/<int:user_id>/', unfollow_user, name='unfollow_user'),
+   
 ]

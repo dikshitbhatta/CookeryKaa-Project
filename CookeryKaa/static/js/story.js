@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+/*document.addEventListener("DOMContentLoaded", function() {
     const allStories = [
         {
           id:0,
@@ -178,4 +178,219 @@ document.addEventListener("DOMContentLoaded", function() {
             reader.readAsDataURL(file);
         }
     });
+});*/
+
+
+
+
+   /* function showFullView(storyId) {
+        console.log("Fetching story with ID:", storyId);
+        fetch(`/get_stories/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(stories => {
+                console.log("Fetched stories:", stories);
+                const storiesFullView = document.querySelector(".stories-fullview");
+                const StoryImageFull = storiesFullView.querySelector(".story img");
+                const StoryAuthorFull = storiesFullView.querySelector(".story .author");
+    
+                const updateFullView = () => {
+                    const story = stories.find(s => s.id === storyId);
+                    if (!story) {
+                        console.error("Story not found:", storyId);
+                        return;
+                    }
+                    console.log("Updating full view with story:", story);
+                    StoryImageFull.src = story.content;
+                    StoryAuthorFull.innerHTML = `Posted at: ${story.posted}`;
+                };
+    
+                const nextBtnFull = storiesFullView.querySelector(".next-btn");
+                const prevBtnFull = storiesFullView.querySelector(".prev-btn");
+    
+                nextBtnFull.addEventListener("click", () => {
+                    currentStoryIndex = (currentStoryIndex + 1) % stories.length;
+                    updateFullView();
+                });
+    
+                prevBtnFull.addEventListener("click", () => {
+                    currentStoryIndex = (currentStoryIndex - 1 + stories.length) % stories.length;
+                    updateFullView();
+                });
+    
+                const StoryCloseBtn = storiesFullView.querySelector(".story-close-btn");
+                StoryCloseBtn.addEventListener("click", () => {
+                    storiesFullView.classList.remove("active");
+                });
+    
+                storiesFullView.classList.add("active");
+                updateFullView();
+            })
+            .catch(error => console.error('Error:', error));
+    }*/
+
+    
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const fileInput = document.getElementById("story-upload");
+        const createStoryBtn = document.querySelector(".create-story-btn");
+        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        const storiesContainer = document.querySelector(".stories");
+    
+        createStoryBtn.addEventListener("click", () => {
+            fileInput.click();
+        });
+    
+        fileInput.addEventListener("change", function() {
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const formData = new FormData();
+                formData.append('content', file);
+                formData.append('csrfmiddlewaretoken', csrfToken);
+    
+                fetch('/new_story/', {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                    } else {
+                        addStoryToUI(data);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        });
+    
+        function fetchStories() {
+            fetch('/get_stories/')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        data.forEach(story => {
+                            addStoryToUI(story);
+                        });
+                    } else {
+                        console.error('Data is not an array:', data);
+                    }
+                })
+                .catch(error => console.error('Error fetching stories:', error));
+        }
+    
+        function addStoryToUI(data) {
+            const story = document.createElement("div");
+            story.classList.add("story");
+            const img = document.createElement("img");
+            img.src = data.content;
+            const author = document.createElement("div");
+            author.classList.add("author");
+            author.innerHTML = `Posted by: ${data.author} <br> Caption: ${data.caption} <br> Posted at: ${data.posted}`;
+    
+            story.appendChild(img);
+            story.appendChild(author);
+    
+            storiesContainer.appendChild(story);
+    
+            story.addEventListener("click", () => {
+                console.log("Story clicked:", data.id);
+                showFullView(data);
+            });
+        }
+    
+        function showFullView(storyData) {
+            const storiesFullView = document.querySelector(".stories-fullview");
+            const StoryImageFull = storiesFullView.querySelector(".story img");
+            const StoryAuthorFull = storiesFullView.querySelector(".story .author");
+    
+            StoryImageFull.src = storyData.content;
+            StoryAuthorFull.innerHTML = `Posted by: ${storyData.author} <br> Caption: ${storyData.caption} <br> Posted at: ${storyData.posted}`;
+    
+            storiesFullView.classList.add("active");
+        }
+    
+        // Close full view modal
+        const StoryCloseBtn = document.querySelector(".stories-fullview .story-close-btn");
+        StoryCloseBtn.addEventListener("click", () => {
+            const storiesFullView = document.querySelector(".stories-fullview");
+            storiesFullView.classList.remove("active");
+        });
+    
+        // Fetch and display stories on page load
+        fetchStories();
+    });
+    
+
+
+    function updateFullView() {
+        StoryImageFull.src = allStories[currentActive].imageURL;
+        StoryAuthorFull.innerHTML = allStories[currentActive].author;
+    }
+
+    const StoryCloseBtn = document.querySelector(".story-close-btn");
+    StoryCloseBtn.addEventListener("click", () => {
+        const storiesFullView = document.querySelector(".stories-fullview");
+        storiesFullView.classList.remove("active");
+        header.classList.remove("remove");
+        navbar.classList.remove("remove");
+    });
+
+    const nextBtn = document.querySelector(".stories-container .next-btn");
+    const prevBtn = document.querySelector(".stories-container .prev-btn");
+    const Storiescontent = document.querySelector(".stories-container .content");
+
+    nextBtn.addEventListener("click", () => {
+        Storiescontent.scrollLeft += 300;
+    });
+
+    prevBtn.addEventListener("click", () => {
+        Storiescontent.scrollLeft -= 300;
+    });
+
+    Storiescontent.addEventListener("scroll", () => {
+        if (Storiescontent.scrollLeft <= 24) {
+            prevBtn.classList.remove("active");
+        } else {
+            prevBtn.classList.add("active");
+        }
+        let maxScrollValue = Storiescontent.scrollWidth - Storiescontent.clientWidth - 24;
+        if (Storiescontent.scrollLeft >= maxScrollValue) {
+            nextBtn.classList.remove("active");
+        } else {
+            nextBtn.classList.add("active");
+        }
+    });
+
+    const nextBtnFull = document.querySelector(".stories-fullview .next-btn");
+    const prevBtnFull = document.querySelector(".stories-fullview .prev-btn");
+
+    nextBtnFull.addEventListener("click", () => {
+        currentActive++;
+        if (currentActive >= allStories.length) {
+            currentActive = 0; // Wrap around to the first story
+        }
+        updateFullView();
+    });
+
+    prevBtnFull.addEventListener("click", () => {
+        currentActive--;
+        if (currentActive < 0) {
+            currentActive = allStories.length - 1; // Wrap around to the last story
+        }
+        updateFullView();
 });
+
+

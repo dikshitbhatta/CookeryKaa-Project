@@ -744,6 +744,7 @@ header.remove{
     z-index: 0;
     column-gap: 100px;
     margin-right: 30%;
+    overflow: hidden;
    
  }
  .stories-container .prev-btn,
@@ -786,7 +787,8 @@ header.remove{
  .stories-container .story{
     height: 200px; 
     width: 150px;
-    flex-shrink: 0;
+    margin: 0 5px;
+    flex:0 0 20%;
     border-radius: 16px;
     overflow: hidden;
     position: relative;
@@ -799,9 +801,11 @@ header.remove{
  }
  .stories-container .stories{
     display: flex;
-    gap: 8px;
+    gap: 18px;
  }
  .stories-container .content{
+    display: flex;
+    align-items: center;
     overflow-x: scroll;
     scrollbar-width: none;
     scroll-behavior: smooth;
@@ -821,15 +825,20 @@ header.remove{
     background:linear-gradient(transparent,black 130%);
  }
  .stories-fullview{
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     position: fixed;
     inset: 0;
-    z-index: 5;
+    z-index: 100000;
     background: rgba(0, 0, 0, 0.9);
     display: none;
+    align-items: center;
     place-items:center;
  }
  .stories-fullview.active{
-    display: grid;
+    display: block;
  } 
  .stories-fullview .story-close-btn{
     position: absolute;
@@ -884,7 +893,7 @@ header.remove{
 }.stories-container .create-story {
     height: 200px !important;
     width: 150px !important;
-    flex-shrink: 0;
+    margin: 0 5px;
     border-radius: 16px;
     overflow: hidden;
     position: relative;

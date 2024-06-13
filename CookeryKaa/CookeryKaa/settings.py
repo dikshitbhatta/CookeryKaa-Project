@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 from django.contrib.messages import constants as messages
 
@@ -205,7 +206,18 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-CELERY_BROKER_URL = 'amqp://localhost:5672'
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+
+CELERY_BEAT_SCHEDULE = {
+    'check-story-date': {
+        'task': 'stories.tasks.CheckStoriesDate',  # Path to your CheckStoriesDate task
+        'schedule': timedelta(hours=1),  # Run every hour
+    },
+    'delete-expired-stories': {
+        'task': 'stories.tasks.DeleteExpired',  # Path to your DeleteExpired task
+        'schedule': timedelta(days=1),  # Run once a day
+    },
+}
 
 #528666864512-omvsilck8ubeke39u6nala1ho9j5urg3.apps.googleusercontent.com
 #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

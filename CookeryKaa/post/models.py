@@ -137,25 +137,23 @@ class Review(models.Model):
 
 
 class Follow(models.Model):
-	follower = models.ForeignKey(User,on_delete=models.CASCADE, null=True, related_name='follower')
-	following = models.ForeignKey(User,on_delete=models.CASCADE, null=True, related_name='following')
+    follower = models.ForeignKey(User,null=True,related_name='following', on_delete=models.CASCADE)
+    following = models.ForeignKey(User, related_name='followers',null=True, on_delete=models.CASCADE)
 
-	def user_follow(sender, instance, *args, **kwargs):
-		follow = instance
-		sender = follow.follower
-		following = follow.following
-		notify = Notification(sender=sender, user=following, notification_type=3)
-		notify.save()
+    def user_follow(sender, instance, *args, **kwargs):
+        follow = instance
+        sender = follow.follower
+        following = follow.following
+        notify = Notification(sender=sender, user=following, notification_type=3)
+        notify.save()
 
-	def user_unfollow(sender, instance, *args, **kwargs):
-		follow = instance
-		sender = follow.follower
-		following = follow.following
+    def user_unfollow(sender, instance, *args, **kwargs):
+        follow = instance
+        sender = follow.follower
+        following = follow.following
 
-		notify = Notification.objects.filter(sender=sender, user=following, notification_type=3)
-		notify.delete()
-
-
+        notify = Notification.objects.filter(sender=sender, user=following, notification_type=3)
+        notify.delete()
 # Stream model to handle the feed of new recipes posted by followed users
 class Stream(models.Model):
     following = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='stream_following')
@@ -212,3 +210,14 @@ post_delete.connect(Likes.user_unlike_post, sender=Likes)
 post_save.connect(Follow.user_follow, sender=Follow)
 post_delete.connect(Follow.user_unfollow, sender=Follow)
 
+class Notification(models.Model):
+    user = models.ForeignKey(User, related_name='notifications', on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, related_name='sent_notifications', on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)
+    notification_type = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+# class Follow(models.Model):
+#     follower = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
+#     following = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)

@@ -60,19 +60,20 @@
               <h2>{{ user.username }}</h2>
               <p>{{ user.profile.bio }}</p>
               <p>{{ user.email }}</p>
-          <button class="button" id="follow-btn" data-user-id="{{ user.id }}">
-            {% csrf_token %}
-            Follow
-            <!-- <input type="hidden" name="csrf_token" value="{csrf_token}"> -->
-            {% comment %} {% if already_following %}  
-              Unfollow
-            {%else%}
-              Follow
-            {%endif%} {% endcomment %}
-          </button>
+              <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+
+              <button class="button" id="follow-btn" data-user-id="{{ user.id }}">
+                {% if already_following %}  
+                  Unfollow
+                {% else %}
+                  Follow
+                {% endif %}
+              </button>
 
           <ul class="about">
-            <li><span id="followers-count">{{followers_count}}</span> Followers</li>
+            <li><span id="followers-count">{{ followers_count }}</span> Followers
+            </li>
+            
             <li><span id="following-count">{{following_count}}</span> Following</li>
         </ul>
         
@@ -110,61 +111,79 @@
 </div>
 
 
-<!--
-<script>
-document.getElementById('follow-btn').addEventListener('click', function() {
-  const userId = this.getAttribute('data-user-id');
-  const csrfToken = document.getElementById('csrf_token').value;
 
-  fetch("{% url 'follow_user' %}", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': csrfToken
-    },
-    body: JSON.stringify({
-      user_id: userId
-    })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.status === 'followed') {
-      alert('You are now following this user.');
-      document.getElementById('follow-btn').textContent = 'Unfollow';
-    } else if (data.status === 'already_following') {
-      alert('You have unfollowed this user.');
-      document.getElementById('follow-btn').textContent = 'Follow';
-    } else {
-      alert('There was an error following this user.');
-      document.getElementById('follow-btn').textContent = 'Follow';
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    const followBtn = document.getElementById('follow-btn');
+    const userId = followBtn.getAttribute('data-user-id');
+    const csrfToken = '{{ csrf_token }}';
+
+    followBtn.addEventListener('click', function() {
+        fetch("{% url 'follow_user' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                user_id: userId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'followed') {
+                followBtn.textContent = 'Unfollow';
+            } else if (data.status === 'unfollowed') {
+                followBtn.textContent = 'Follow';
+            }
+            document.getElementById('followers-count').textContent = data.followers_count;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    function updateFollowersCount() {
+        fetch("{% url 'get_follow_counts' %}?user_id=" + userId)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('followers-count').textContent = data.followers_count;
+                document.getElementById('following-count').textContent = data.following_count;
+            })
+            .catch(error => {
+                console.error('Error fetching follow counts:', error);
+            });
     }
-  });
+
+    function setInitialFollowButton() {
+        fetch("{% url 'check_follow_status' %}?user_id=" + userId)
+            .then(response => response.json())
+            .then(data => {
+                if (data.is_following) {
+                    followBtn.textContent = 'Unfollow';
+                } else {
+                    followBtn.textContent = 'Follow';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching follow status:', error);
+            });
+    }
+
+    updateFollowersCount();
+    setInitialFollowButton();
 });
 </script>
 
-<script>
-  function updateCounts() {
-      fetch("{% url 'get_follow_counts' %}")
-          .then(response => response.json())
-          .then(data => {
-              document.getElementById('followers-count').textContent = data.followers_count;
-              document.getElementById('following-count').textContent = data.following_count;
-          })
-          .catch(error => {
-              console.error('Error:', error);
-          });
-  }
 
-  // Call the updateCounts function initially to populate counts on page load
-  updateCounts();
-</script>
 
--->
 <!-- Hidden file input element -->
+<input type="hidden" id="csrf_token" value="{{ csrf_token }}">
 <input type="file" id="file-input" style="display: none;">
 
 <script src="{% static 'js/profile.js' %}"></script>
-<script src="{% static 'js/follow_unfollow.js' %}"></script>
+
 
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

@@ -265,39 +265,47 @@
         
     </div>
     <div class="stories-container">
-      <div class="content">
-          <div class="prev-btn"><ion-icon name="chevron-back-outline" class="prev-next-btn"></ion-icon></div>
-          <div class="stories">
-              <div class="create-story" id="create-story">
-                  <div class="create-story-content">
-                      <img id="profile-picture" src="{{ user.profile.picture.url }}" alt="Profile Picture">
-                      <div class="create-story-btn">
-                          <ion-icon name="add-circle-outline" class="create-icon"></ion-icon>
-                          <span>Create story</span>
-                      </div>
-                      <input type="file" id="story-upload" accept="image/*" style="display: none;">
-                  </div>
-              </div>
-              <div class="story">
-                    <img src="{%static 'img/assests/6.jpg'%}" alt="">
-                    <div class="author">Author</div>
-              </div>
-          </div>
-          <div class="next-btn active"><ion-icon name="chevron-forward-outline" class="prev-next-btn"></ion-icon></div>
-      </div>
-  </div>
+        <div class="content">
+            <div class="prev-btn"><ion-icon name="chevron-back-outline" class="prev-next-btn"></ion-icon></div>
+            <div class="stories">
+                <div class="create-story" id="create-story">
+                    <div class="create-story-content">
+                        <img id="profile-picture" src="{{ user.profile.picture.url }}" alt="Profile Picture">
+                        <div class="create-story-btn">
+                            <ion-icon name="add-circle-outline" class="create-icon"></ion-icon>
+                            <span>Create story</span>
+                        </div>
+                        <input type="file" id="story-upload" accept="image/*" style="display: none;">
+                        <input type="hidden" id="csrf-token" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    </div>
+                </div>
+            </div>
+            <div class="next-btn active"><ion-icon name="chevron-forward-outline" class="prev-next-btn"></ion-icon></div>
 
-  <!-- Fullview Modal -->
-    <div class="stories-fullview">
-      <div class="story-close-btn"><ion-icon name="close-outline"></ion-icon></div>
-      <div class="content">
-        <div class="prev-btn"><ion-icon name="chevron-back-outline" class="prev-next-btn"></ion-icon></div>
-        <div class="story">
-          <img src="images/assests/5.jpg" alt="">
-          <div class="author">Author</div>
+            {% for story in stories %}
+            <div class="story">
+                <img src="{{story.content_url}}" alt="Story Image">
+                <div class="author">{{story.user__username}}</div>
+            </div>
+            {% comment %} <pre>{{ story|safe }}</pre> {% endcomment %}
+            {% endfor %}
+
+
+
         </div>
-        <div class="next-btn "><ion-icon name="chevron-forward-outline" class="prev-next-btn"></ion-icon></div>
-      </div>
+    </div>
+
+    <!-- Fullview Modal -->
+    <div class="stories-fullview">
+        <div class="story-close-btn"><ion-icon name="close-outline"></ion-icon></div>
+        <div class="content">
+            <div class="prev-btn"><ion-icon name="chevron-back-outline" class="prev-next-btn"></ion-icon></div>
+            <div class="story">
+                <img src="" alt="">
+                <div class="author"></div>
+            </div>
+            <div class="next-btn"><ion-icon name="chevron-forward-outline" class="prev-next-btn"></ion-icon></div>
+        </div>
     </div>
 
      <div class="container swiper">
@@ -515,6 +523,17 @@
         let subMenu = document.getElementById('subMenu');
         subMenu.classList.toggle('open-menu');
     }
+
+    /*document.addEventListener("DOMContentLoaded", function() {
+      const fileInput = document.getElementById("content");
+      const form = document.getElementById("story-form");
+
+      fileInput.addEventListener("change", function() {
+        if (fileInput.files.length > 0) {
+          form.submit();
+        }
+      });
+    })*/
 </script>
 
     <script src="{% static 'js/notifications.js' %}"></script>

@@ -25,7 +25,8 @@ urlpatterns = [
     path('accounts/',include('allauth.urls')),
     path('',include('Cook.urls')),
     path('',include('post.urls')),
-    path('',include('notifications.urls'))
+    path('',include('notifications.urls')),
+    path('',include('stories.urls'))
 ]
 
 if settings.DEBUG:
