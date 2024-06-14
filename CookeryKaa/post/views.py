@@ -91,6 +91,25 @@ def recipe_detail(request, pk):
         'comments': comments
     })
     
+def recipe_detail_json(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    ingredients = list(Ingredient.objects.filter(recipe=recipe).values())
+    directions = list(Direction.objects.filter(recipe=recipe).values())
+    data = {
+        'id': recipe.id,
+        'name': recipe.name,
+        'description': recipe.description,
+        'categories': list(recipe.categories.values_list('name', flat=True)),
+        'photo_url': recipe.photo.url if recipe.photo else '',
+        'video_url': recipe.video.url if recipe.video else '',
+        'preparation_time': recipe.preparation_time,
+        'cooking_time': recipe.cooking_time,
+        'posted': recipe.posted,
+        'average_rating': recipe.average_rating,
+        'ingredients': ingredients,
+        'directions': directions
+    }
+    return JsonResponse(data)
 
 
 @login_required

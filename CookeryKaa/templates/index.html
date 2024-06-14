@@ -469,7 +469,7 @@
                           <button id="comment">
                               <img src="{% static 'img/reactions/comment.png' %}">
                           </button>
-                          <button id="share">
+                          <button id="share" onclick="openShareModal({{ post.id }})">
                               <img src="{% static 'img/reactions/share.png' %}" alt="">
                           </button>
                           
@@ -521,6 +521,17 @@
       </div>
   </div>
   </div>
+  <div id="shareModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeShareModal()">&times;</span>
+      <h2>Share in Story</h2>
+      <textarea id="storyText" placeholder="Add some text..."></textarea>
+      <img id="storyContent" alt="Recipe Content" style="display: none;" />
+      <video id="storyContent" controls style="display: none;"></video>
+      <input type="hidden" id="recipeId" />
+      <button onclick="shareInStory()">Share</button>
+    </div>
+  </div>
 
 
   <script>
@@ -547,6 +558,7 @@
     <script src="{%static 'js/swiper-bundle.min.js'%}"></script>
     <script src="{%static 'js/script.js'%}"></script>
     <script src="{%static 'js/story.js'%}"></script>
+    <script src="{%static 'js/share.js'%}"></script>
     <script src="{% static 'js/feed.js' %}"></script>
     <script src="{% static 'js/like.js' %}"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
