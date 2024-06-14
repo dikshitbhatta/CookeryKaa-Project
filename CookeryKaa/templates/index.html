@@ -12,7 +12,9 @@
     <title >Cookeryकाँ</title>
     <link rel="icon" type="image/x-icon" href="{%static 'img/assets/logo.png'%}">
   <!-- Swiper CSS -->
+  <link rel="stylesheet" href="{%static 'css/feed.css'%}"/>
     <link rel="stylesheet" href="{%static 'css/swiper-bundle.min.css'%}" />
+    
     <link rel="stylesheet" href="{%static 'css/style.css'%}"/>
     <link rel="stylesheet" href="{%static 'css/recipie.css'%}"/>
     <link rel="stylesheet" href="{% static 'css/notifications.css' %}"/>
@@ -466,11 +468,18 @@
                               </button>
                               <span class="reaction_count" id="reaction_count-{{ post.pk }}">{{ post.like_count }}</span>
                           </div>
-                          <button id="comment">
+                          <button id="comment" onclick="toggleCommentSection(this)">
                               <img src="{% static 'img/reactions/comment.png' %}">
                           </button>
-                          <button id="share" onclick="openShareModal({{ post.id }})">
+                          <span id="comment_count">0</span>
+                          <button id="share" >
                               <img src="{% static 'img/reactions/share.png' %}" alt="">
+                              <ul className="sharedown">
+                                <li><a href="#" onclick="openShareModal({{ post.id }})"><IonIcon icon={duplicateOutline} />Share to your story</a></li>
+                                <li><a href="#" onclick="shareRecipe()"><IonIcon icon={logoFacebook} />Share in facebook</a></li>
+                                <li><a href="#"><IonIcon icon={logoInstagram} />Share in instagram</a></li>
+                                <li><a href="#"><IonIcon icon={copyOutline} />Copy link</a></li>
+                                </ul>
                           </button>
                           
                           
@@ -487,6 +496,14 @@
                                 {% endfor %}
                             </div>
                             <div class="ratingValue" id="ratingValue-{{post.pk}}"></div>
+                            <div class="comment-section" style="display: none;">
+                                <div class="comment_input">
+                                    <input type="text" placeholder="Add a comment..." class="comment-input-field">
+                                    <button class="comment-submit" onclick="handleCommentSubmit(this)">Submit</button>
+        
+                                </div>
+                                <div class="comments-list"></div>
+                            </div>    
                         </div>
                       </div>
                   </div>
@@ -540,6 +557,32 @@
         console.log('Profile icon clicked'); // Debugging log
         let subMenu = document.getElementById('subMenu');
         subMenu.classList.toggle('open-menu');
+    }
+
+    window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '1002600241461219',
+                xfbml      : true,
+                version    : 'v12.0'
+            });
+            FB.AppEvents.logPageView();
+        };
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        function shareRecipe() {
+        FB.ui({
+            method: 'share',
+            href: ' https://a790-101-251-6-50.ngrok-free.app/your_recipe', // Replace with your local recipe URL
+            quote: 'Check out this amazing recipe from CookeryKaa!',
+            hashtag: '#CookeryKaa',
+        }, function(response){});
     }
 
     /*document.addEventListener("DOMContentLoaded", function() {
