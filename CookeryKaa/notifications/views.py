@@ -40,3 +40,9 @@ def count_notifications(request):
         count = Notification.objects.filter(user=request.user, is_seen=False).count()
         return JsonResponse({'count': count})
     return HttpResponse(status=400)
+
+@login_required
+@require_POST
+def seen_Notification(request):
+    Notification.objects.filter(user=request.user, is_seen=False).update(is_seen=True)
+    return JsonResponse({'success': True})
