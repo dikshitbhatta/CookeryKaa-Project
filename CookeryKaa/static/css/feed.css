@@ -278,6 +278,7 @@ h1 {
    background-color: white;
    list-style-type: none;
    padding: 0;
+   bottom: 100%;
    margin: 0;
    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
    z-index: 1;
@@ -301,13 +302,15 @@ h1 {
  }
  
  .sharedown li a:hover {
-   background-color: #f1f1f1;
+   background-color: whitesmoke;
  }
  
  /* Ensure the dropdown menu appears below the share button */
  #share {
    position: relative;
-   display: inline-block;
+   display: flex;
+   align-items: center;
+
  }
  
  /* Style the icons and text within the dropdown */

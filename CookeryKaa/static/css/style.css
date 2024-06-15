@@ -187,7 +187,8 @@ header.remove{
 .navbar a:hover::after {
     transform-origin: left;
     transform: scaleX(1);
-}.dropdown {
+}
+.dropdown {
     display: none;
     margin-top: 6px;
     position: absolute;
